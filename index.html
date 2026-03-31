@@ -3,151 +3,189 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zenith Temperature | Premium Sensor</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    <title>Conan Hub | Alert & Anti-Repeat V3.5</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --gold: #d4af37;
-            --dark-bg: #0a0a0a;
-            --glass: rgba(255, 255, 255, 0.05);
-        }
+        :root { --conan-gold: #d4af37; --glass: rgba(255, 255, 255, 0.08); --danger: #ff4d4d; --accent: #00d4ff; }
+        body { margin: 0; font-family: 'Kanit', sans-serif; background: #000; color: white; display: flex; justify-content: center; min-height: 100vh; padding-bottom: 50px; overflow-x: hidden; }
+        
+        /* แถบแจ้งเตือนตอนใหม่ */
+        .new-release-banner { background: linear-gradient(90deg, #1a1a1a, #b8860b, #1a1a1a); color: #fff; padding: 10px; font-size: 0.85rem; font-weight: 600; text-align: center; border-bottom: 1px solid var(--conan-gold); position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        .new-release-banner span { color: #fff; text-shadow: 0 0 10px rgba(255,255,255,0.5); animation: blink 1.5s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
-        body {
-            margin: 0;
-            padding: 0;
-            background: var(--dark-bg);
-            color: white;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        /* พื้นหลังหรูๆ */
-        .bg-gradient {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
-            z-index: -1;
-        }
-
-        /* การ์ดแก้ว */
-        .card {
-            background: var(--glass);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 215, 0, 0.2);
-            padding: 3rem;
-            border-radius: 30px;
-            text-align: center;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
-            width: 300px;
-            position: relative;
-        }
-
-        /* วงแหวนสถานะ */
-        .temp-circle {
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            margin: 0 auto 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            border: 2px solid var(--glass);
-            position: relative;
-            transition: all 0.5s ease;
-        }
-
-        .glow {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 2px solid transparent;
-            border-top: 2px solid var(--gold);
-            animation: rotate 2s linear infinite;
-        }
-
-        @keyframes rotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        h1 { font-size: 1rem; color: var(--gold); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 20px; }
-        .temp-value { font-size: 4rem; font-weight: bold; margin: 0; text-shadow: 0 0 20px rgba(212, 175, 55, 0.5); }
-        .unit { font-size: 1.5rem; color: var(--gold); }
-        .status-text { margin-top: 15px; font-size: 0.9rem; opacity: 0.7; }
-
+        #updateModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
+        .modal-content { background: #111; border: 2px solid var(--conan-gold); border-radius: 20px; padding: 25px; max-width: 400px; width: 85%; text-align: center; }
+        .update-list { text-align: left; font-size: 0.8rem; background: rgba(255,255,255,0.05); padding: 12px; border-radius: 10px; margin: 15px 0; line-height: 1.5; }
+        .container { width: 100%; max-width: 500px; padding: 20px 15px; text-align: center; }
+        .premium-card { background: var(--glass); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 24px; padding: 20px; backdrop-filter: blur(15px); }
+        .result-container { margin: 10px 0; min-height: 150px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .info-badge { display: inline-block; padding: 4px 12px; background: rgba(212, 175, 55, 0.1); border: 1px solid var(--conan-gold); border-radius: 50px; font-size: 0.8rem; color: var(--conan-gold); margin-bottom: 5px; opacity: 0; transition: 0.3s; }
+        .info-badge.show { opacity: 1; }
+        .ep-display { font-size: 1.8rem; font-weight: 600; color: #fff; opacity: 0; transform: translateY(10px); transition: 0.4s; }
+        .ep-display span { color: var(--conan-gold); font-size: 1.1rem; display: block; margin-top: 5px; font-weight: 300; }
+        .ep-display.show { opacity: 1; transform: translateY(0); }
+        .btn-main { width: 100%; padding: 12px; font-size: 1rem; font-weight: 600; border-radius: 12px; border: none; cursor: pointer; transition: 0.2s; margin-bottom: 8px; font-family: 'Kanit'; }
+        .btn-gold { background: linear-gradient(135deg, #d4af37 0%, #f1d57a 100%); color: #000; }
+        .btn-dark { background: rgba(255,255,255,0.1); color: #fff; border: 1px solid #444; }
+        .history-card { margin-top: 20px; text-align: left; background: rgba(0,0,0,0.5); border-radius: 15px; padding: 15px; border: 1px solid rgba(255,255,255,0.1); }
+        .history-title { font-size: 0.85rem; color: var(--conan-gold); margin-bottom: 10px; display: flex; justify-content: space-between; }
+        .history-list { max-height: 250px; overflow-y: auto; font-size: 0.8rem; }
+        .history-item { padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: space-between; }
+        .btn-del { color: var(--danger); cursor: pointer; font-size: 1.1rem; margin-left: 10px; }
+        .door-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 999; display: flex; }
+        .door { position: absolute; width: 50%; height: 100%; background: #050505; transition: 0.5s ease-in-out; border: 1px solid var(--conan-gold); }
+        .door-left { left: -50%; } .door-right { right: -50%; }
+        .door-container.active .door-left { transform: translateX(100%); }
+        .door-container.active .door-right { transform: translateX(-100%); }
+        select { background: #111; color: #fff; border: 1px solid #444; padding: 10px; border-radius: 8px; width: 100%; font-family: 'Kanit'; margin-bottom: 8px; }
     </style>
 </head>
 <body>
 
-<div class="bg-gradient"></div>
+<div class="new-release-banner">
+    🚨 NEXT CASE: <span>ซีซั่น 25 ตอนที่ 12</span> จะเพิ่มเข้าวันเสาร์นี้ เวลา 21:00 น.!
+</div>
 
-<div class="card">
-    <h1>System Monitor</h1>
-    <div class="temp-circle" id="circle">
-        <div class="glow"></div>
-        <p class="temp-value" id="temp-display">--</p>
-        <span class="unit">°C</span>
+<div id="updateModal">
+    <div class="modal-content">
+        <h3>📢 อัปเดต V3.5 (Alert Edition)</h3>
+        <div class="update-list">
+            • <b>แจ้งเตือนตอนใหม่:</b> ซีซั่น 25 ตอนที่ 12 เสาร์นี้ 21:00!<br>
+            • <b>ระบบล็อคตอนซ้ำ:</b> ถ้ามีในประวัติจะสุ่มไม่เจอเด็ดขาด<br>
+            • <b>การปลดล็อค:</b> กดถังขยะลบรายการ เพื่อให้สุ่มเจอได้ใหม่<br>
+            • <b>การนับเลข:</b> 1-19 รันยาว / 20-25 นับใหม่ 1-52
+        </div>
+        <button class="btn-main btn-gold" onclick="closeModal()">รับทราบค่าาา!</button>
     </div>
-    <div class="status-text" id="status-msg">กำลังตรวจสอบความร้อน...</div>
+</div>
+
+<div class="door-container" id="doorSystem"><div class="door door-left"></div><div class="door door-right"></div></div>
+
+<div class="container">
+    <h2 style="letter-spacing: 2px; margin-bottom: 5px;">CONAN HUB</h2>
+    <div class="premium-card">
+        <div id="badge" class="info-badge">พร้อมสืบคดี...</div>
+        <div class="result-container"><h2 id="epDisplay" class="ep-display">สุ่มคดีใหม่ที่ไม่ซ้ำเดิม!</h2></div>
+        <button class="btn-main btn-gold" onclick="spinEverything()">สุ่มทุกอย่าง (ห้ามซ้ำ)</button>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+            <button class="btn-main btn-dark" onclick="spinMovie()">มูฟวี่ 1-28</button>
+            <button class="btn-main btn-dark" onclick="spinLupin()">ปะทะ ลูแปง</button>
+        </div>
+        <select id="charSelect">
+            <option value="kid">จอมโจรคิด 🎩</option>
+            <option value="ai">ไฮบาระ ไอ 🧪</option>
+            <option value="amuro">อามุโร่ ☕</option>
+            <option value="akai">อากาอิ 🔫</option>
+        </select>
+        <button class="btn-main" style="background:none; border:1px solid var(--conan-gold); color:white;" onclick="spinChar()">สุ่มตามตัวละคร</button>
+        <div class="history-card">
+            <div class="history-title">ประวัติการสุ่ม (ลบเพื่อสุ่มซ้ำ) <span onclick="clearAllHistory()" style="cursor:pointer; opacity:0.6;">[ล้างทั้งหมด]</span></div>
+            <div id="historyList" class="history-list"><div style="text-align:center; padding:10px; color:#555;">ยังไม่มีประวัติ</div></div>
+        </div>
+    </div>
 </div>
 
 <script>
-    async function updateTemp() {
-        try {
-            // ดึงข้อมูลแบตเตอรี่ (สำหรับ Android/Chrome)
-            if ('getBattery' in navigator) {
-                const battery = await navigator.getBattery();
-                
-                // หมายเหตุ: เบราว์เซอร์ส่วนใหญ่ตัดการเข้าถึงอุณหภูมิโดยตรงออก
-                // เราจะใช้การจำลอง Logic จากเปอร์เซ็นต์และสถานะชาร์จเพื่อให้เห็น UI ทำงาน
-                // หรือถ้าใช้ API เฉพาะทางในเครื่องบางรุ่นจะดึงค่าจริงได้
-                
-                let mockTemp = 32 + (Math.random() * 5); // จำลองอุณหภูมิฐาน
-                if(battery.charging) mockTemp += 10; // ถ้าชาร์จอยู่จะร้อนขึ้น
-                
-                displayTemp(mockTemp.toFixed(1));
-            } else {
-                displayTemp("N/A");
-                document.getElementById('status-msg').innerText = "เบราว์เซอร์ไม่รองรับ";
-            }
-        } catch (e) {
-            console.error(e);
-        }
+    const movieNames = ["คดีปริศนาระเบิดระฟ้า", "คดีฆาตกรรมไพ่ปริศนา", "พ่อมดคนสุดท้ายแห่งศตวรรษ", "คดีฆาตกรรมนัยน์ตาปริศนา", "คดีปริศนาเส้นตายสู่สวรรค์", "ปริศนาบนถนนสายมรณะ", "คดีฆาตกรรมแห่งเมืองปริศนา", "มนตราแห่งรัตติกาลสีเงิน", "ยุทธการเหนือห้วงทะเลลึก", "บทเพลงมรณะแด่เหล่ายอดนักสืบ", "ปริศนามหาขุมทรัพย์โจรสลัด", "บทเพลงแห่งความตาย", "ปริศนานักล่าทรชนทมิฬ", "ปริศนามรณะเหนือน่านฟ้า", "15 นาทีเฉียดตาย", "ระทึกขวัญเรือรบมรณะ", "ปริศนาทานตะวันมรณะ", "ปริศนารัตติกาลทมิฬ", "ปริศนาเพลงกลอนซ่อนรัก", "ปฏิบัติการสายลับเดอะซีโร่", "ศึกชิงอัญมณีสีคราม", "กระสุนสีเพลิง", "เจ้าสาวฮาโลวีน", "มฤตยูใต้น้ำทมิฬ", "ดาวห้าแฉกแห่งร้อยล้าน", "ศึกชิงเพชรกลางท้องฟ้า", "คดีฆาตกรรมปริศนาโรงละคร", "คดีปริศนากุหลาบดำ"];
+    const charData = { 
+        kid: ["ซีซั่น 1 ตอนที่ 78", "ซีซั่น 3 ตอนที่ 139", "ซีซั่น 5 ตอนที่ 235", "ซีซั่น 8 ตอนที่ 381", "ซีซั่น 10 ตอนที่ 512"],
+        ai: ["ซีซั่น 3 ตอนที่ 136", "ซีซั่น 4 ตอนที่ 148", "ซีซั่น 5 ตอนที่ 190", "ซีซั่น 7 ตอนที่ 298"],
+        amuro: ["ซีซั่น 15 ตอนที่ 719", "ซีซั่น 16 ตอนที่ 751", "ซีซั่น 18 ตอนที่ 832"],
+        akai: ["ซีซั่น 6 ตอนที่ 249", "ซีซั่น 7 ตอนที่ 277", "ซีซั่น 12 ตอนที่ 538"]
+    };
+    const tvSeasons = { 20: 52, 21: 52, 22: 52, 23: 53, 24: 52, 25: 11 };
+    let history = JSON.parse(localStorage.getItem('conan_final_v3_5')) || [];
+
+    function closeModal() { document.getElementById('updateModal').style.display = 'none'; }
+    function startSpin(fn) {
+        document.getElementById('doorSystem').classList.add('active');
+        setTimeout(() => { document.getElementById('epDisplay').classList.remove('show'); fn(); }, 500);
+        setTimeout(() => document.getElementById('doorSystem').classList.remove('active'), 1200);
+        setTimeout(() => { document.getElementById('epDisplay').classList.add('show'); document.getElementById('badge').classList.add('show'); }, 1500);
     }
 
-    function displayTemp(val) {
-        const el = document.getElementById('temp-display');
-        const circle = document.getElementById('circle');
-        const msg = document.getElementById('status-msg');
-        
-        el.innerText = val;
+    function isDuplicate(text) { return history.some(h => h.text.includes(text)); }
 
-        // เปลี่ยนสีตามความร้อน
-        if(val > 40) {
-            circle.style.borderColor = "#ff4d4d";
-            msg.innerText = "ระบบมีความร้อนสูง (Critical)";
-            msg.style.color = "#ff4d4d";
-        } else if(val > 35) {
-            circle.style.borderColor = "#ffa500";
-            msg.innerText = "เครื่องเริ่มอุ่น (Warning)";
-        } else {
-            circle.style.borderColor = "var(--gold)";
-            msg.innerText = "สถานะปกติ (Optimal)";
-        }
+    function spinEverything() {
+        startSpin(() => {
+            let res = "", badge = "", retry = 0;
+            do {
+                const p = Math.random();
+                if (p < 0.6) {
+                    if (Math.random() < 0.5) {
+                        const ep = Math.floor(Math.random() * 981) + 1;
+                        res = `ซีซั่น ${Math.ceil(ep/52) > 19 ? 19 : Math.ceil(ep/52)} ตอนที่ ${ep}`;
+                        badge = "iQIYI";
+                    } else {
+                        const s = Object.keys(tvSeasons)[Math.floor(Math.random() * 6)];
+                        const ep = Math.floor(Math.random() * tvSeasons[s]) + 1;
+                        res = `ซีซั่น ${s} ตอนที่ ${ep}`;
+                        badge = "TrueVisions";
+                    }
+                } else if (p < 0.9) {
+                    const i = Math.floor(Math.random() * movieNames.length);
+                    res = `Movie ${i+1}: ${movieNames[i]}`;
+                    badge = "เดอะมูฟวี่";
+                } else {
+                    res = Math.random() > 0.5 ? "Lupin III vs Conan (2009)" : "Lupin III vs Conan (2013)";
+                    badge = "ตอนพิเศษ";
+                }
+                retry++; if(retry > 60) break;
+            } while (isDuplicate(res));
+            updateUI(res.includes(':') ? `Movie ${res.split(': ')[0].split(' ')[1]} <span>${res.split(': ')[1]}</span>` : res, badge);
+            addH(res);
+        });
     }
 
-    // อัปเดตทุกๆ 3 วินาที
-    setInterval(updateTemp, 3000);
-    updateTemp();
+    function spinMovie() {
+        startSpin(() => {
+            let res, retry = 0;
+            do {
+                const i = Math.floor(Math.random() * movieNames.length);
+                res = `Movie ${i+1}: ${movieNames[i]}`;
+                retry++; if(retry > 50) break;
+            } while (isDuplicate(res));
+            updateUI(`Movie ${res.split(': ')[0].split(' ')[1]} <span>${res.split(': ')[1]}</span>`, "เดอะมูฟวี่");
+            addH(res);
+        });
+    }
+
+    function spinLupin() {
+        startSpin(() => {
+            let res = Math.random() > 0.5 ? "Lupin III vs Conan (2009)" : "Lupin III vs Conan (2013)";
+            if (isDuplicate(res)) res = res.includes("2009") ? "Lupin III vs Conan (2013)" : "Lupin III vs Conan (2009)";
+            updateUI(res, "ตอนพิเศษ");
+            addH(res);
+        });
+    }
+
+    function spinChar() {
+        startSpin(() => {
+            const c = document.getElementById('charSelect').value;
+            const pool = charData[c];
+            let res, retry = 0;
+            do {
+                res = pool[Math.floor(Math.random() * pool.length)];
+                retry++; if(retry > 20) break;
+            } while (isDuplicate(res));
+            updateUI(res, `ตัวละคร: ${c.toUpperCase()}`);
+            addH(res + ` (${c})`);
+        });
+    }
+
+    function updateUI(m, b) { document.getElementById('epDisplay').innerHTML = m; document.getElementById('badge').innerHTML = b; }
+    function addH(t) { history.unshift({ id: Date.now(), text: t, checked: false }); save(); }
+    function toggleC(id) { const i = history.find(h => h.id === id); if(i) i.checked = !i.checked; save(); }
+    function delI(id, e) { e.stopPropagation(); history = history.filter(h => h.id !== id); save(); }
+    function clearAllHistory() { if(confirm("ล้างทั้งหมดแล้วจะสุ่มตอนเดิมซ้ำได้ใหม่?")) { history = []; save(); } }
+    function save() {
+        localStorage.setItem('conan_final_v3_5', JSON.stringify(history));
+        const l = document.getElementById('historyList');
+        if(!history.length) { l.innerHTML = '<div style="text-align:center; padding:10px; color:#555;">ไม่มีประวัติ</div>'; return; }
+        l.innerHTML = history.map(h => `<div class="history-item ${h.checked ? 'checked' : ''}" onclick="toggleC(${h.id})"><span>${h.text}</span><div><span style="cursor:pointer;">${h.checked ? '✅' : '⭕'}</span><span class="btn-del" onclick="delI(${h.id}, event)">🗑️</span></div></div>`).join('');
+    }
+    save();
 </script>
-
 </body>
 </html>
-
