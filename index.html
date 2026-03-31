@@ -36,17 +36,23 @@
         .door-container.active .door-right { transform: translateX(-100%); }
         select { background: #111; color: #fff; border: 1px solid #444; padding: 10px; border-radius: 8px; width: 100%; font-family: 'Kanit'; margin-bottom: 8px; }
 
-        /* --- Chatbot Styles --- */
+        /* --- Chatbot Styles (Custom Rich Menu) --- */
         #chatBtn { position: fixed; bottom: 20px; right: 20px; background: var(--conan-gold); width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.5); z-index: 1001; }
-        #chatWindow { position: fixed; bottom: 90px; right: 20px; width: 300px; height: 400px; background: #111; border: 1px solid var(--conan-gold); border-radius: 15px; display: none; flex-direction: column; overflow: hidden; z-index: 1001; box-shadow: 0 5px 25px rgba(0,0,0,0.8); }
-        .chat-header { background: var(--conan-gold); color: #000; padding: 10px; font-weight: 600; text-align: center; }
-        .chat-body { flex: 1; padding: 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; font-size: 0.85rem; }
+        #chatWindow { position: fixed; bottom: 90px; right: 20px; width: 320px; height: 450px; background: #111; border: 1px solid var(--conan-gold); border-radius: 15px; display: none; flex-direction: column; overflow: hidden; z-index: 1001; box-shadow: 0 5px 25px rgba(0,0,0,0.8); }
+        .chat-header { background: var(--conan-gold); color: #000; padding: 12px; font-weight: 600; text-align: center; }
+        .chat-body { flex: 1; padding: 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; font-size: 0.85rem; background: #0a0a0a; }
         .msg { padding: 8px 12px; border-radius: 12px; max-width: 80%; line-height: 1.4; }
         .bot { background: #222; align-self: flex-start; border: 1px solid #333; }
         .user { background: var(--conan-gold); color: #000; align-self: flex-end; }
-        .chat-input { display: flex; padding: 10px; background: #0a0a0a; border-top: 1px solid #222; }
-        .chat-input input { flex: 1; background: #1a1a1a; border: 1px solid #333; color: #fff; padding: 8px; border-radius: 5px; font-family: 'Kanit'; outline: none; }
-        .chat-input button { background: var(--conan-gold); border: none; padding: 0 15px; margin-left: 5px; border-radius: 5px; cursor: pointer; }
+        
+        /* Rich Menu Area */
+        .rich-menu-container { background: #111; border-top: 2px solid var(--conan-gold); }
+        .menu-tabs { display: grid; grid-template-columns: 1fr 1fr; }
+        .tab { padding: 10px; text-align: center; font-size: 0.9rem; font-weight: bold; cursor: pointer; color: white; background: #222; border-bottom: 2px solid transparent; }
+        .tab.active { background: #d4af37; color: black; }
+        .menu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; padding: 10px; background: #1a1a1a; }
+        .menu-item { background: #333; padding: 8px 2px; border-radius: 5px; text-align: center; font-size: 0.7rem; cursor: pointer; transition: 0.2s; border: 1px solid #444; }
+        .menu-item:hover { background: var(--conan-gold); color: black; }
     </style>
 </head>
 <body>
@@ -90,16 +96,31 @@
     </div>
 </div>
 
-<!-- ระบบแชทบอท -->
+<!-- ระบบแชทบอท (Rich Menu Style) -->
 <div id="chatBtn" onclick="toggleChat()">🔍</div>
 <div id="chatWindow">
-    <div class="chat-header">ผู้ช่วยนักสืบ (Bot)</div>
+    <div class="chat-header">ผู้ช่วยนักสืบ (Rich Menu)</div>
     <div class="chat-body" id="chatBody">
-        <div class="msg bot">สวัสดีครับ! ผมคือบอทผู้ช่วย มีอะไรสงสัยเกี่ยวกับเว็บนี้ถามได้เลยครับ เช่น "เว็บนี้ใช้ยังไง" หรือ "สุ่มซ้ำไหม"</div>
+        <div class="msg bot">สวัสดีครับ! เลือกเมนูที่ด้านล่างเพื่อสอบถามได้เลยครับ</div>
     </div>
-    <div class="chat-input">
-        <input type="text" id="chatInput" placeholder="พิมพ์คำถามที่นี่..." onkeypress="if(event.key === 'Enter') sendMessage()">
-        <button onclick="sendMessage()">ส่ง</button>
+    
+    <div class="rich-menu-container">
+        <div class="menu-tabs">
+            <div class="tab active" id="tabMain" onclick="switchTab('main')">เมนูหลัก</div>
+            <div class="tab" id="tabPromo" onclick="switchTab('promo')">ฟีเจอร์ใหม่</div>
+        </div>
+        <!-- เมนูหลัก -->
+        <div id="gridMain" class="menu-grid">
+            <div class="menu-item" onclick="botReply('วิธีใช้งาน')">วิธีใช้งาน</div>
+            <div class="menu-item" onclick="botReply('สุ่มซ้ำไหม')">สุ่มซ้ำไหม</div>
+            <div class="menu-item" onclick="botReply('ล้างประวัติ')">ล้างประวัติ</div>
+        </div>
+        <!-- เมนูโปรโมชั่น/ฟีเจอร์ -->
+        <div id="gridPromo" class="menu-grid" style="display:none;">
+            <div class="menu-item" onclick="botReply('ซีซั่น 25')">ซีซั่น 25</div>
+            <div class="menu-item" onclick="botReply('จำนวน Movie')">จำนวน Movie</div>
+            <div class="menu-item" onclick="botReply('ติดต่อแอดมิน')">ผู้สร้าง</div>
+        </div>
     </div>
 </div>
 
@@ -111,42 +132,41 @@
         amuro: ["ซีซั่น 15 ตอนที่ 719", "ซีซั่น 16 ตอนที่ 751", "ซีซั่น 18 ตอนที่ 832"],
         akai: ["ซีซั่น 6 ตอนที่ 249", "ซีซั่น 7 ตอนที่ 277", "ซีซั่น 12 ตอนที่ 538"]
     };
-    // อัปเดต Season 25 เป็น 12 ตอนแล้ว
     const tvSeasons = { 20: 52, 21: 52, 22: 52, 23: 53, 24: 52, 25: 12 };
     let history = JSON.parse(localStorage.getItem('conan_norepeat_v3')) || [];
 
-    // --- Chatbot Logic ---
+    // --- New Chatbot Logic (Rich Menu) ---
     function toggleChat() {
         const win = document.getElementById('chatWindow');
         win.style.display = win.style.display === 'flex' ? 'none' : 'flex';
     }
 
-    function sendMessage() {
-        const input = document.getElementById('chatInput');
+    function switchTab(type) {
+        document.getElementById('tabMain').classList.toggle('active', type === 'main');
+        document.getElementById('tabPromo').classList.toggle('active', type === 'promo');
+        document.getElementById('gridMain').style.display = type === 'main' ? 'grid' : 'none';
+        document.getElementById('gridPromo').style.display = type === 'promo' ? 'grid' : 'none';
+    }
+
+    function botReply(cmd) {
         const body = document.getElementById('chatBody');
-        if (!input.value.trim()) return;
-
-        // User message
-        body.innerHTML += `<div class="msg user">${input.value}</div>`;
-        const q = input.value.toLowerCase();
-        input.value = '';
-
-        // Bot Logic
-        let reply = "ขออภัยครับ ผมไม่เข้าใจคำถาม ลองถามเกี่ยวกับ 'วิธีใช้งาน', 'สุ่มซ้ำ', หรือ 'ข้อมูลซีซั่น' ดูนะครับ";
-        if (q.includes("ใช้") || q.includes("ทำอะไร")) reply = "เว็บนี้ใช้สำหรับสุ่มตอนโคนันครับ มีทั้งแบบสุ่มทุกอย่าง, สุ่มมูฟวี่, สุ่มตอนพิเศษลูแปง หรือจะสุ่มตามตัวละครที่คุณชอบก็ได้ครับ!";
-        if (q.includes("ซ้ำ")) reply = "ระบบของเรามี Anti-Repeat ครับ! ตอนไหนที่สุ่มแล้วจะไปอยู่ใน 'ประวัติ' และจะไม่ถูกสุ่มเจอซ้ำอีกจนกว่าคุณจะกดลบออกจากประวัติครับ";
-        if (q.includes("ลบ") || q.includes("ล้าง")) reply = "คุณสามารถกดปุ่ม [ล้างทั้งหมด] ในส่วนประวัติ หรือกดรูปถังขยะ 🗑️ ท้ายตอนเพื่อนำตอนนั้นกลับมาสุ่มใหม่ได้ครับ";
-        if (q.includes("มูฟวี่") || q.includes("movie")) reply = "ตอนนี้เรามีรายชื่อ Movie ตั้งแต่ภาค 1 จนถึงภาค 28 (คดีปริศนากุหลาบดำ) ครับ";
-        if (q.includes("25") || q.includes("ล่าสุด")) reply = "ซีซั่น 25 อัปเดตล่าสุดถึงตอนที่ 12 แล้วครับ สามารถสุ่มเจอได้ในปุ่ม 'สุ่มทุกอย่าง' ครับ";
-        if (q.includes("ใครสร้าง") || q.includes("บอท")) reply = "ผมเป็นบอทช่วยเหลือของ Conan Hub V3.5 ครับ ออกแบบมาเพื่อช่วยให้นักสืบใช้งานเว็บได้ง่ายขึ้น!";
+        body.innerHTML += `<div class="msg user">${cmd}</div>`;
+        
+        let reply = "กำลังประมวลผล...";
+        if (cmd === 'วิธีใช้งาน') reply = "กดปุ่ม 'สุ่มทุกอย่าง' เพื่อเริ่มสืบคดี! หรือเลือกสุ่มเฉพาะ Movie และตัวละครที่ชอบได้เลยครับ";
+        if (cmd === 'สุ่มซ้ำไหม') reply = "ไม่ซ้ำแน่นอน! ระบบ Anti-Repeat จะกักตอนที่เคยสุ่มแล้วไว้ในประวัติ จนกว่าคุณจะล้างมันออกครับ";
+        if (cmd === 'ล้างประวัติ') reply = "กดที่ปุ่ม [ล้างทั้งหมด] ในแถบประวัติด้านล่าง เพื่อรีเซ็ตให้สุ่มเจอตอนเก่าๆ ได้อีกครั้งครับ";
+        if (cmd === 'ซีซั่น 25') reply = "อัปเดตเรียบร้อย! ตอนนี้มีถึงตอนที่ 12 แล้ว (ข้อมูลล่าสุด V3.5)";
+        if (cmd === 'จำนวน Movie') reply = "มีให้สุ่มตั้งแต่ภาค 1 จนถึงภาค 28 (คดีปริศนากุหลาบดำ) ครบถ้วนครับ!";
+        if (cmd === 'ผู้สร้าง') reply = "ผมคือ AI ผู้ช่วยประจำ Conan Hub V3.5 ยินดีที่ได้รู้จักครับ!";
 
         setTimeout(() => {
             body.innerHTML += `<div class="msg bot">${reply}</div>`;
             body.scrollTop = body.scrollHeight;
-        }, 500);
+        }, 300);
     }
 
-    // --- Original Logic (Do not change) ---
+    // --- Original Logic (No Changes) ---
     function closeModal() { document.getElementById('updateModal').style.display = 'none'; }
     function startSpin(fn) {
         document.getElementById('doorSystem').classList.add('active');
@@ -154,9 +174,7 @@
         setTimeout(() => document.getElementById('doorSystem').classList.remove('active'), 1200);
         setTimeout(() => { document.getElementById('epDisplay').classList.add('show'); document.getElementById('badge').classList.add('show'); }, 1500);
     }
-
     function isDuplicate(text) { return history.some(h => h.text.includes(text)); }
-
     function spinEverything() {
         startSpin(() => {
             let result = "", badge = "", retry = 0;
@@ -189,7 +207,6 @@
             addH(result);
         });
     }
-
     function spinMovie() {
         startSpin(() => {
             let res, retry = 0;
@@ -203,7 +220,6 @@
             addH(res);
         });
     }
-
     function spinLupin() {
         startSpin(() => {
             let res = Math.random() > 0.5 ? "Lupin III vs Conan (2009)" : "Lupin III vs Conan (2013)";
@@ -212,7 +228,6 @@
             addH(res);
         });
     }
-
     function spinChar() {
         startSpin(() => {
             const c = document.getElementById('charSelect').value;
@@ -227,7 +242,6 @@
             addH(res + ` (${c})`);
         });
     }
-
     function updateUI(m, b) { document.getElementById('epDisplay').innerHTML = m; document.getElementById('badge').innerHTML = b; }
     function addH(t) { history.unshift({ id: Date.now(), text: t, checked: false }); save(); }
     function toggleC(id) { const i = history.find(h => h.id === id); if(i) i.checked = !i.checked; save(); }
@@ -243,3 +257,4 @@
 </script>
 </body>
 </html>
+
