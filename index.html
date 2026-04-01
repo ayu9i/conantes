@@ -9,183 +9,177 @@
         :root { --conan-gold: #d4af37; --glass: rgba(255, 255, 255, 0.08); --danger: #ff4d4d; }
         body { margin: 0; font-family: 'Kanit', sans-serif; background: #000; color: white; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding-bottom: 50px; overflow-x: hidden; }
         
-        /* --- แถบประกาศ Testing & Countdown --- */
-        .test-banner { width: 100%; background: var(--danger); color: white; text-align: center; padding: 10px 0; font-weight: 600; font-size: 0.9rem; position: sticky; top: 0; z-index: 2000; box-shadow: 0 4px 15px rgba(255, 77, 77, 0.3); }
-        #countdownBox { font-size: 0.8rem; background: rgba(0,0,0,0.3); padding: 2px 10px; border-radius: 5px; margin-top: 5px; display: inline-block; }
+        /* --- แถบประกาศเด่นชัด (ตามภาพสกรีนช็อต) --- */
+        .test-banner { width: 100%; background: var(--danger); color: white; text-align: center; padding: 12px 0; font-weight: 600; font-size: 1rem; position: sticky; top: 0; z-index: 2000; box-shadow: 0 4px 20px rgba(255, 77, 77, 0.5); border-bottom: 2px solid white; }
+        #countdownBox { background: rgba(0,0,0,0.5); padding: 5px 15px; border-radius: 8px; margin-top: 8px; display: inline-block; font-size: 0.9rem; letter-spacing: 1px; }
 
-        /* --- Self Destruct Overlay --- */
+        /* --- หน้าจอระเบิดตัวเอง --- */
         #boomOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
+        #boomOverlay h1 { color: var(--danger); font-size: 3.5rem; text-shadow: 0 0 20px red; }
 
-        /* --- Survey Modal --- */
+        /* --- แบบสอบถาม 10 ข้อ --- */
         #surveyModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 3000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(15px); }
-        .survey-content { background: #111; border: 2px solid var(--conan-gold); border-radius: 20px; padding: 25px; max-width: 450px; width: 90%; max-height: 85vh; overflow-y: auto; }
-        .survey-q { text-align: left; margin-bottom: 15px; background: rgba(255,255,255,0.03); padding: 10px; border-radius: 10px; }
-        .survey-q label { display: block; font-size: 0.85rem; color: var(--conan-gold); margin-bottom: 8px; }
+        .survey-content { background: #111; border: 2px solid var(--conan-gold); border-radius: 20px; padding: 25px; max-width: 450px; width: 90%; max-height: 80vh; overflow-y: auto; box-shadow: 0 0 30px var(--conan-gold); }
+        .survey-q { text-align: left; margin-bottom: 15px; background: rgba(255,255,255,0.03); padding: 12px; border-radius: 12px; border-left: 4px solid var(--conan-gold); }
+        .survey-q label { display: block; font-size: 0.85rem; color: var(--conan-gold); margin-bottom: 8px; font-weight: 600; }
         .survey-input { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #444; background: #222; color: white; font-family: 'Kanit'; box-sizing: border-box; }
 
-        /* --- Original Style remains unchanged --- */
+        /* --- Layout เดิมคงไว้ --- */
         #updateModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
         .modal-content { background: #111; border: 2px solid var(--conan-gold); border-radius: 20px; padding: 25px; max-width: 400px; width: 85%; text-align: center; }
         .update-list { text-align: left; font-size: 0.8rem; background: rgba(255,255,255,0.05); padding: 12px; border-radius: 10px; margin: 15px 0; line-height: 1.5; }
         .container { width: 100%; max-width: 500px; padding: 20px 15px; text-align: center; transition: max-width 0.3s; }
-        .btn-group-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        @media (min-width: 768px) { .container { max-width: 800px; } .premium-card { padding: 40px; } .btn-group-grid { grid-template-columns: repeat(4, 1fr); } .ep-display { font-size: 2.5rem; } }
-        .premium-card { background: var(--glass); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 24px; padding: 20px; backdrop-filter: blur(15px); }
+        .btn-group-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+        @media (min-width: 768px) { .container { max-width: 800px; } .premium-card { padding: 40px; } .btn-group-grid { grid-template-columns: repeat(4, 1fr); } .ep-display { font-size: 2.8rem; } }
+        .premium-card { background: var(--glass); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 24px; padding: 20px; backdrop-filter: blur(15px); box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
         .result-container { margin: 10px 0; min-height: 150px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .info-badge { display: inline-block; padding: 4px 12px; background: rgba(212, 175, 55, 0.1); border: 1px solid var(--conan-gold); border-radius: 50px; font-size: 0.8rem; color: var(--conan-gold); margin-bottom: 5px; opacity: 0; transition: 0.3s; }
         .info-badge.show { opacity: 1; }
         .ep-display { font-size: 1.8rem; font-weight: 600; color: #fff; opacity: 0; transform: translateY(10px); transition: 0.4s; }
         .ep-display span { color: var(--conan-gold); font-size: 1.1rem; display: block; margin-top: 5px; font-weight: 300; }
         .ep-display.show { opacity: 1; transform: translateY(0); }
-        .btn-main { width: 100%; padding: 12px; font-size: 1rem; font-weight: 600; border-radius: 12px; border: none; cursor: pointer; transition: 0.2s; margin-bottom: 8px; font-family: 'Kanit'; }
-        .btn-gold { background: linear-gradient(135deg, #d4af37 0%, #f1d57a 100%); color: #000; }
+        .btn-main { width: 100%; padding: 12px; font-size: 1rem; font-weight: 600; border-radius: 12px; border: none; cursor: pointer; transition: 0.2s; font-family: 'Kanit'; }
+        .btn-gold { background: linear-gradient(135deg, #d4af37 0%, #f1d57a 100%); color: #000; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3); }
         .btn-dark { background: rgba(255,255,255,0.1); color: #fff; border: 1px solid #444; }
         .history-card { margin-top: 20px; text-align: left; background: rgba(0,0,0,0.5); border-radius: 15px; padding: 15px; border: 1px solid rgba(255,255,255,0.1); }
         .history-title { font-size: 0.85rem; color: var(--conan-gold); margin-bottom: 10px; display: flex; justify-content: space-between; }
         .history-list { max-height: 250px; overflow-y: auto; font-size: 0.8rem; }
-        .history-item { padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: space-between; }
-        .history-item.checked span:first-child { text-decoration: line-through; opacity: 0.4; }
-        .btn-del { color: var(--danger); cursor: pointer; font-size: 1.1rem; margin-left: 10px; }
+        .history-item { padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
+        .btn-del { color: var(--danger); font-size: 1.1rem; margin-left: 10px; }
         .door-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 999; display: flex; }
         .door { position: absolute; width: 50%; height: 100%; background: #050505; transition: 0.5s ease-in-out; border: 1px solid var(--conan-gold); }
         .door-left { left: -50%; } .door-right { right: -50%; }
         .door-container.active .door-left { transform: translateX(100%); }
         .door-container.active .door-right { transform: translateX(-100%); }
-        select { background: #111; color: #fff; border: 1px solid #444; padding: 10px; border-radius: 8px; width: 100%; font-family: 'Kanit'; margin-bottom: 8px; }
 
         /* --- Chatbot Styles --- */
-        #chatBtn { position: fixed; bottom: 20px; right: 20px; background: var(--conan-gold); width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.5); z-index: 1001; }
-        #chatWindow { position: fixed; bottom: 90px; right: 20px; width: 320px; height: 450px; background: #111; border: 1px solid var(--conan-gold); border-radius: 15px; display: none; flex-direction: column; overflow: hidden; z-index: 1001; box-shadow: 0 5px 25px rgba(0,0,0,0.8); }
+        #chatBtn { position: fixed; bottom: 20px; right: 20px; background: var(--conan-gold); width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; cursor: pointer; z-index: 1001; }
+        #chatWindow { position: fixed; bottom: 90px; right: 20px; width: 320px; height: 450px; background: #111; border: 1px solid var(--conan-gold); border-radius: 15px; display: none; flex-direction: column; overflow: hidden; z-index: 1001; }
         .chat-header { background: var(--conan-gold); color: #000; padding: 12px; font-weight: 600; text-align: center; }
-        .chat-body { flex: 1; padding: 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; font-size: 0.85rem; background: #0a0a0a; }
-        .msg { padding: 8px 12px; border-radius: 12px; max-width: 80%; line-height: 1.4; }
-        .bot { background: #222; align-self: flex-start; border: 1px solid #333; }
+        .chat-body { flex: 1; padding: 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #0a0a0a; font-size: 0.85rem; }
+        .msg { padding: 8px 12px; border-radius: 12px; max-width: 80%; }
+        .bot { background: #222; align-self: flex-start; }
         .user { background: var(--conan-gold); color: #000; align-self: flex-end; }
-        .rich-menu-container { background: #111; border-top: 2px solid var(--conan-gold); }
+        .rich-menu-container { border-top: 2px solid var(--conan-gold); }
         .menu-tabs { display: grid; grid-template-columns: 1fr 1fr; }
-        .tab { padding: 10px; text-align: center; font-size: 0.9rem; font-weight: bold; cursor: pointer; color: white; background: #222; border-bottom: 2px solid transparent; }
-        .tab.active { background: #d4af37; color: black; }
+        .tab { padding: 10px; text-align: center; cursor: pointer; background: #222; font-weight: bold; }
+        .tab.active { background: var(--conan-gold); color: #000; }
         .menu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; padding: 10px; background: #1a1a1a; }
-        .menu-item { background: #333; padding: 8px 2px; border-radius: 5px; text-align: center; font-size: 0.7rem; cursor: pointer; transition: 0.2s; border: 1px solid #444; }
-        .menu-item:hover { background: var(--conan-gold); color: black; }
+        .menu-item { background: #333; padding: 8px; border-radius: 5px; text-align: center; font-size: 0.7rem; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <div id="boomOverlay">
-    <h1 style="color:var(--danger); font-size: 3rem;">💥 SYSTEM EXPIRED</h1>
-    <p>เวอร์ชั่นทดสอบสิ้นสุดลงแล้ว<br>ขอบคุณที่มาร่วมทดสอบกันนะคะ! รอติดตามอัปเดตครั้งถัดไป</p>
+    <h1>💥 SYSTEM EXPIRED</h1>
+    <p>ขอบคุณที่ร่วมเป็นส่วนหนึ่งของการทดสอบนะคะ!<br>ระบบทำลายตัวเองเรียบร้อยแล้ว พบกันใหม่เวอร์ชันถัดไป</p>
 </div>
 
 <div class="test-banner">
-    ⚠️ TESTING VERSION: สำหรับทดสอบระบบและการประเมินผลเท่านั้น ⚠️<br>
-    <div id="countdownBox">ระบบจะทำลายตัวเองในอีก: <span id="timer">--:--:--</span></div>
+    ⚠️ TESTING VERSION: สำหรับทดสอบและให้คะแนนเว็บเท่านั้น ⚠️<br>
+    <div id="countdownBox">ระเบิดตัวเองในอีก: <span id="timer">77:06:51</span></div>
 </div>
 
 <div id="surveyModal">
     <div class="survey-content">
-        <h3 style="color:var(--conan-gold); text-align: center;">📋 แบบสอบถามนักสืบ (10 ข้อ)</h3>
-        <div class="survey-q"><label>1. ชื่อนักสืบของคุณ</label><input type="text" class="survey-input" placeholder="ระบุชื่อ"></div>
-        <div class="survey-q"><label>2. เพศ</label><select class="survey-input"><option>ชาย</option><option>หญิง</option><option>LGBTQ+</option><option>ไม่ระบุ</option></select></div>
-        <div class="survey-q"><label>3. อายุ</label><input type="number" class="survey-input" placeholder="ระบุอายุ"></div>
-        <div class="survey-q"><label>4. คุณชอบดูโคนันซีซั่นไหนมากที่สุด?</label><input type="text" class="survey-input" placeholder="เช่น ซีซั่น 15"></div>
-        <div class="survey-q"><label>5. ระบบสุ่มแบบ Anti-Repeat ใช้งานง่ายไหม?</label><select class="survey-input"><option>ง่ายมาก</option><option>ปานกลาง</option><option>งงนิดหน่อย</option></select></div>
-        <div class="survey-q"><label>6. ความสวยงามของหน้าเว็บ (1-10 คะแนน)</label><input type="number" class="survey-input" min="1" max="10"></div>
-        <div class="survey-q"><label>7. ความเร็วในการเปิดหน้าเว็บ</label><select class="survey-input"><option>เร็วทันใจ</option><option>ปกติ</option><option>ช้าเล็กน้อย</option></select></div>
-        <div class="survey-q"><label>8. อยากให้เพิ่มตัวละครไหนในระบบสุ่มอีก?</label><input type="text" class="survey-input" placeholder="เช่น รัน, เซระ"></div>
-        <div class="survey-q"><label>9. คุณพบ Bug หรือจุดที่ต้องแก้ตรงไหนไหม?</label><input type="text" class="survey-input" placeholder="ระบุข้อบกพร่อง"></div>
-        <div class="survey-q"><label>10. คะแนนความพึงพอใจโดยรวม (1-10)</label><input type="number" class="survey-input" min="1" max="10"></div>
-        <button class="btn-main btn-gold" onclick="closeSurvey()">ส่งแบบสอบถาม</button>
+        <h3 style="color:var(--conan-gold); text-align: center;">📊 ประเมินผลนักสืบ (10 ข้อ)</h3>
+        <div class="survey-q"><label>1. ชื่อ - นามสกุล หรือ นามแฝง</label><input type="text" class="survey-input" id="q1" placeholder="ระบุชื่อ"></div>
+        <div class="survey-q"><label>2. เพศ</label><select class="survey-input" id="q2"><option>ชาย</option><option>หญิง</option><option>LGBTQ+</option></select></div>
+        <div class="survey-q"><label>3. อายุ (ปี)</label><input type="number" class="survey-input" id="q3"></div>
+        <div class="survey-q"><label>4. คุณให้คะแนนดีไซน์หน้าเว็บเท่าไหร่? (1-10)</label><input type="number" class="survey-input" id="q4" min="1" max="10"></div>
+        <div class="survey-q"><label>5. ฟีเจอร์ "สุ่มซ้ำ" มีประโยชน์กับคุณไหม?</label><select class="survey-input" id="q5"><option>มีประโยชน์มาก</option><option>เฉยๆ</option><option>ไม่ค่อยจำเป็น</option></select></div>
+        <div class="survey-q"><label>6. อยากให้เพิ่มเมนูสุ่มอะไรอีก?</label><input type="text" class="survey-input" id="q6" placeholder="เช่น ภาคพิเศษ, OVA"></div>
+        <div class="survey-q"><label>7. ระบบประมวลผลเร็วแค่ไหน?</label><select class="survey-input" id="q7"><option>เร็วมาก</option><option>ปกติ</option><option>ช้า</option></select></div>
+        <div class="survey-q"><label>8. ใช้งานบนมือถือลำบากไหม?</label><select class="survey-input" id="q8"><option>ลื่นไหลดี</option><option>มีปุ่มทับกัน</option></select></div>
+        <div class="survey-q"><label>9. ข้อเสนอแนะเพิ่มเติมถึงผู้พัฒนา</label><input type="text" class="survey-input" id="q9"></div>
+        <div class="survey-q"><label>10. คุณจะแนะนำเว็บนี้ให้เพื่อนไหม?</label><select class="survey-input" id="q10"><option>แน่นอน!</option><option>อาจจะ</option><option>ไม่</option></select></div>
+        <button class="btn-main btn-gold" onclick="closeSurvey()">ส่งผลประเมิน ✨</button>
     </div>
 </div>
 
 <div id="updateModal">
-    <div class="modal-content">
-        <h3>📢 ประกาศเวอร์ชันทดสอบ V3.5</h3>
-        <div class="update-list">
-            • <b>Test Mode:</b> ระบบเปิดให้ทดสอบถึงวันเสาร์ 20.59 น.<br>
-            • <b>Survey:</b> รบกวนทำแบบสอบถามเพื่อนำคะแนนไปพัฒนานะคะ<br>
-            • <b>Self-Destruct:</b> ระบบจะระเบิดตัวเองอัตโนมัติเมื่อหมดเวลา<br>
-            • <b>New:</b> เพิ่มระบบนับถอยหลังที่แถบด้านบน
-        </div>
-        <button class="btn-main btn-gold" onclick="closeModal()">รับทราบและเริ่มทดสอบ!</button>
-    </div>
+    <div class="modal-content">
+        <h3>📢 อัปเดต Testing V3.5</h3>
+        <div class="update-list">
+            • <b>Self-Destruct:</b> บึ้มตัวเองเสาร์นี้ 20.59 น.<br>
+            • <b>Survey System:</b> ระบบประเมิน 10 ข้อเปิดใช้งานแล้ว<br>
+            • <b>Anti-Repeat:</b> ปรับปรุงประสิทธิภาพการสุ่มไม่ซ้ำ<br>
+            • <b>UI Update:</b> ปรับแถบสถานะให้เห็นชัดขึ้น
+        </div>
+        <button class="btn-main btn-gold" onclick="closeModal()">รับทราบ 🕵️‍♂️</button>
+    </div>
 </div>
 
 <div class="door-container" id="doorSystem"><div class="door door-left"></div><div class="door door-right"></div></div>
 
 <div class="container">
-    <h2 style="letter-spacing: 2px;">CONAN HUB <small style="font-size: 0.5rem; color: var(--danger);">[TESTING]</small></h2>
-    <div class="premium-card">
-        <div id="badge" class="info-badge">พร้อมสืบคดี...</div>
-        <div class="result-container"><h2 id="epDisplay" class="ep-display">สุ่มตอนที่ไม่เคยดูได้เลย!</h2></div>
-        
-        <div class="btn-group-grid">
-            <button class="btn-main btn-gold" style="grid-column: span 2;" onclick="spinEverything()">สุ่มทุกอย่าง</button>
-            <button class="btn-main btn-dark" onclick="spinMovie()">มูฟวี่ 1-28</button>
-            <button class="btn-main btn-dark" onclick="spinLupin()">ปะทะ ลูแปง</button>
-        </div>
+    <h2 style="letter-spacing: 3px; font-weight: 600;">CONAN HUB <small style="color:var(--danger); font-size: 0.6rem;">PROTOTYPE</small></h2>
+    
+    <div class="premium-card">
+        <div id="badge" class="info-badge">สแตนด์บาย...</div>
+        <div class="result-container"><h2 id="epDisplay" class="ep-display">สุ่มคดีที่น่าสนใจได้เลย!</h2></div>
+        
+        <div class="btn-group-grid">
+            <button class="btn-main btn-gold" style="grid-column: span 2;" onclick="spinEverything()">สุ่มทุกอย่าง</button>
+            <button class="btn-main btn-dark" onclick="spinMovie()">มูฟวี่ 1-28</button>
+            <button class="btn-main btn-dark" onclick="spinLupin()">ปะทะ ลูแปง</button>
+        </div>
 
-        <div class="btn-group-grid">
-            <div style="grid-column: span 2;">
-                <select id="charSelect">
-                    <option value="kid">จอมโจรคิด 🎩</option>
-                    <option value="ai">ไฮบาระ ไอ 🧪</option>
-                    <option value="amuro">อามุโร่ ☕</option>
-                    <option value="akai">อากาอิ 🔫</option>
-                </select>
-            </div>
-            <button class="btn-main" style="background:none; border:1px solid var(--conan-gold); color:white; grid-column: span 2;" onclick="spinChar()">สุ่มตามตัวละคร</button>
-        </div>
+        <div class="btn-group-grid">
+            <div style="grid-column: span 2;">
+                <select id="charSelect" style="background:#111; color:white; border:1px solid #444; padding:10px; border-radius:8px; width:100%; font-family:'Kanit';">
+                    <option value="kid">จอมโจรคิด 🎩</option>
+                    <option value="ai">ไฮบาระ ไอ 🧪</option>
+                    <option value="amuro">อามุโร่ ☕</option>
+                    <option value="akai">อากาอิ 🔫</option>
+                </select>
+            </div>
+            <button class="btn-main" style="background:none; border:1px solid var(--conan-gold); color:white; grid-column: span 2;" onclick="spinChar()">สุ่มตามตัวละคร</button>
+        </div>
 
-        <div class="history-card">
-            <div class="history-title">ประวัติ (ห้ามสุ่มซ้ำ) <span onclick="clearAllHistory()" style="cursor:pointer; opacity:0.6;">[ล้างทั้งหมด]</span></div>
-            <div id="historyList" class="history-list"><div style="text-align:center; padding:10px; color:#555;">ยังไม่มีประวัติ</div></div>
-        </div>
+        <div class="history-card">
+            <div class="history-title">รายการที่ดูแล้ว (ห้ามสุ่มซ้ำ) <span onclick="clearAllHistory()" style="cursor:pointer; opacity:0.5;">[ล้าง]</span></div>
+            <div id="historyList" class="history-list"><div style="text-align:center; padding:10px; color:#555;">ยังไม่มีประวัติ</div></div>
+        </div>
 
-        <button class="btn-main" style="margin-top:20px; font-size: 0.8rem; background: rgba(255,255,255,0.05); color: #888;" onclick="openSurvey()">📋 ทำแบบสอบถามการใช้งาน</button>
-    </div>
+        <button class="btn-main" style="margin-top:20px; font-size:0.8rem; background:rgba(212,175,55,0.1); color:var(--conan-gold); border:1px dashed var(--conan-gold);" onclick="openSurvey()">📋 คลิกเพื่อทำแบบสอบถามและให้คะแนน</button>
+    </div>
 </div>
 
 <div id="chatBtn" onclick="toggleChat()">🔍</div>
 <div id="chatWindow">
-    <div class="chat-header">ผู้ช่วยนักสืบ (Rich Menu)</div>
-    <div class="chat-body" id="chatBody">
-        <div class="msg bot">สวัสดีค่ะ! เลือกเมนูที่ด้านล่างเพื่อสอบถามได้เลยนะคะ</div>
-    </div>
-    <div class="rich-menu-container">
-        <div class="menu-tabs">
-            <div class="tab active" id="tabMain" onclick="switchTab('main')">เมนูหลัก</div>
-            <div class="tab" id="tabPromo" onclick="switchTab('promo')">ฟีเจอร์ใหม่</div>
-        </div>
-        <div id="gridMain" class="menu-grid">
-            <div class="menu-item" onclick="botReply('วิธีใช้งาน')">วิธีใช้งาน</div>
-            <div class="menu-item" onclick="botReply('สุ่มซ้ำไหม')">สุ่มซ้ำไหม</div>
-            <div class="menu-item" onclick="botReply('ล้างประวัติ')">ล้างประวัติ</div>
-        </div>
-        <div id="gridPromo" class="menu-grid" style="display:none;">
-            <div class="menu-item" onclick="botReply('ซีซั่น 25')">ซีซั่น 25</div>
-            <div class="menu-item" onclick="botReply('จำนวน Movie')">จำนวน Movie</div>
-            <div class="menu-item" onclick="botReply('ติดต่อแอดมิน')">ผู้สร้าง</div>
-        </div>
-    </div>
+    <div class="chat-header">ผู้ช่วยนักสืบ (Rich Menu)</div>
+    <div class="chat-body" id="chatBody">
+        <div class="msg bot">สวัสดีค่ะ! เลือกเมนูที่ด้านล่างได้เลยนะคะ</div>
+    </div>
+    <div class="rich-menu-container">
+        <div class="menu-tabs">
+            <div class="tab active" id="tabMain" onclick="switchTab('main')">เมนูหลัก</div>
+            <div class="tab" id="tabPromo" onclick="switchTab('promo')">ฟีเจอร์ใหม่</div>
+        </div>
+        <div id="gridMain" class="menu-grid">
+            <div class="menu-item" onclick="botReply('วิธีใช้งาน')">วิธีใช้งาน</div>
+            <div class="menu-item" onclick="botReply('สุ่มซ้ำไหม')">สุ่มซ้ำไหม</div>
+            <div class="menu-item" onclick="botReply('ล้างประวัติ')">ล้างประวัติ</div>
+        </div>
+        <div id="gridPromo" class="menu-grid" style="display:none;">
+            <div class="menu-item" onclick="botReply('ซีซั่น 25')">ซีซั่น 25</div>
+            <div class="menu-item" onclick="botReply('จำนวน Movie')">Movie</div>
+            <div class="menu-item" onclick="botReply('ติดต่อแอดมิน')">ผู้สร้าง</div>
+        </div>
+    </div>
 </div>
 
 <script>
-    // --- Self Destruct & Countdown Logic ---
-    function updateTimer() {
+    // --- ระบบระเบิดตัวเอง (เสาร์ 20.59) ---
+    function updateCountdown() {
         const now = new Date();
-        const dest = new Date();
-        
-        // เซ็ตไปวันเสาร์ถัดไป
-        dest.setDate(now.getDate() + (6 - now.getDay() + 7) % 7);
-        dest.setHours(20, 59, 0, 0);
+        const target = new Date();
+        target.setDate(now.getDate() + (6 - now.getDay() + 7) % 7);
+        target.setHours(20, 59, 0, 0);
+        if (now > target) target.setDate(target.getDate() + 7);
 
-        // ถ้าวันนี้เลยวันเสาร์ 20.59 ไปแล้ว ให้ไปเสาร์หน้า
-        if (now > dest) dest.setDate(dest.getDate() + 7);
-
-        const diff = dest - now;
-        
+        const diff = target - now;
         if (diff <= 0) {
             document.getElementById('boomOverlay').style.display = 'flex';
             document.body.style.overflow = 'hidden';
@@ -196,36 +190,36 @@
         const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
         const s = Math.floor((diff % (1000 * 60)) / 1000);
         document.getElementById('timer').innerText = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
-        
-        setTimeout(updateTimer, 1000);
+        setTimeout(updateCountdown, 1000);
     }
-    updateTimer();
+    updateCountdown();
 
     function openSurvey() { document.getElementById('surveyModal').style.display = 'flex'; }
-    function closeSurvey() { alert('บันทึกข้อมูลเรียบร้อย! ขอบคุณที่ร่วมทดสอบนะคะ'); document.getElementById('surveyModal').style.display = 'none'; }
+    function closeSurvey() { 
+        alert('ส่งผลประเมินเรียบร้อยแล้ว ขอบคุณที่ช่วยเราพัฒนาค่ะ!'); 
+        document.getElementById('surveyModal').style.display = 'none'; 
+    }
 
-    const movieNames = ["คดีปริศนาระเบิดระฟ้า", "คดีฆาตกรรมไพ่ปริศนา", "ปริศนาพ่อมดคนสุดท้ายแห่งศตวรรษ", "คดีฆาตกรรมนัยน์ตาปริศนา", "คดีปริศนาเส้นตายสู่สวรรค์", "ปริศนาบนถนนสายมรณะ", "คดีฆาตกรรมแห่งเมืองปริศนา", "มนตราแห่งรัตติกาลสีเงิน", "ยุทธการเหนือห้วงทะเลลึก", "บทเพลงมรณะแด่เหล่าเหล่านักสืบ", "ปริศนามหาขุมทรัพย์โจรสลัด", "บทเพลงแห่งความตาย", "ปริศนานักฆ่าทรยศ", "ปริศนามรณะเหนือน่านฟ้า", "15 นาทีเฉียดตายไขปริศนามรณะ", "ภาคระทึกขวัญยุทธจักรลูกหนัง", "ฝ่าวิกฤติเรือรบมรณะ", "ปริศนากระสุนมรณะ", "ปริศนาทานตะวันมรณะ", "ปริศนารัตติกาลทมิฬ", "ปริศนาเพลงกลอนซ่อนรัก", "ปฏิบัติการสายลับศูนย์", "ศึกชิงอัญมณีสีคราม", "กระสุนสีเพลิง", "เจ้าสาวฮาโลวีน", "มฤตยูใต้น้ำทมิฬ", "ปริศนาปราการห้าแฉก", "ปริศนาภาพติดตามรณะ"];
-    const charData = { kid: ["ซีซั่น 1 ตอนที่ 78", "ซีซั่น 3 ตอนที่ 139", "ซีซั่น 5 ตอนที่ 235", "ซีซั่น 8 ตอนที่ 381", "ซีซั่น 10 ตอนที่ 512"], ai: ["ซีซั่น 3 ตอนที่ 136", "ซีซั่น 4 ตอนที่ 148", "ซีซั่น 5 ตอนที่ 190", "ซีซั่น 7 ตอนที่ 298"], amuro: ["ซีซั่น 15 ตอนที่ 719", "ซีซั่น 16 ตอนที่ 751", "ซีซั่น 18 ตอนที่ 832"], akai: ["ซีซั่น 6 ตอนที่ 249", "ซีซั่น 7 ตอนที่ 277", "ซีซั่น 12 ตอนที่ 538"] };
-    const tvSeasons = { 20: 52, 21: 52, 22: 52, 23: 53, 24: 52, 25: 12 };
-    let history = JSON.parse(localStorage.getItem('conan_norepeat_v3')) || [];
+    const movieNames = ["คดีปริศนาระเบิดระฟ้า", "คดีฆาตกรรมไพ่ปริศนา", "ปริศนาพ่อมดคนสุดท้ายแห่งศตวรรษ", "คดีฆาตกรรมนัยน์ตาปริศนา", "คดีปริศนาเส้นตายสู่สวรรค์", "ปริศนาบนถนนสายมรณะ", "คดีฆาตกรรมแห่งเมืองปริศนา", "มนตราแห่งรัตติกาลสีเงิน", "ยุทธการเหนือห้วงทะเลลึก", "บทเพลงมรณะแด่เหล่าเหล่านักสืบ", "ปริศนามหาขุมทรัพย์โจรสลัด", "บทเพลงแห่งความตาย", "ปริศนานักฆ่าทรยศ", "ปริศนามรณะเหนือน่านฟ้า", "15 นาทีเฉียดตายไขปริศนามรณะ", "ภาคระทึกขวัญยุทธจักรลูกหนัง", "ฝ่าวิกฤติเรือรบมรณะ", "ปริศนากระสุนมรณะ", "ปริศนาทานตะวันมรณะ", "ปริศนารัตติกาลทมิฬ", "ปริศนาเพลงกลอนซ่อนรัก", "ปฏิบัติการสายลับศูนย์", "ศึกชิงอัญมณีสีคราม", "กระสุนสีเพลิง", "เจ้าสาวฮาโลวีน", "มฤตยูใต้น้ำทมิฬ", "ปริศนาปราการห้าแฉก", "ปริศนาภาพติดตามรณะ"];
+    const charData = { kid: ["ซีซั่น 1 ตอนที่ 78", "ซีซั่น 3 ตอนที่ 139", "ซีซั่น 5 ตอนที่ 235"], ai: ["ซีซั่น 3 ตอนที่ 136", "ซีซั่น 5 ตอนที่ 190"], amuro: ["ซีซั่น 15 ตอนที่ 719"], akai: ["ซีซั่น 6 ตอนที่ 249"] };
+    const tvSeasons = { 20: 52, 21: 52, 22: 52, 23: 53, 24: 52, 25: 12 };
+    let history = JSON.parse(localStorage.getItem('conan_norepeat_v3')) || [];
 
-    function toggleChat() { const win = document.getElementById('chatWindow'); win.style.display = win.style.display === 'flex' ? 'none' : 'flex'; }
-    function switchTab(type) { document.getElementById('tabMain').classList.toggle('active', type === 'main'); document.getElementById('tabPromo').classList.toggle('active', type === 'promo'); document.getElementById('gridMain').style.display = type === 'main' ? 'grid' : 'none'; document.getElementById('gridPromo').style.display = type === 'promo' ? 'grid' : 'none'; }
-    function botReply(cmd) { const body = document.getElementById('chatBody'); body.innerHTML += `<div class="msg user">${cmd}</div>`; let reply = "กำลังประมวลผลค่ะ..."; if (cmd === 'วิธีใช้งาน') reply = "กดปุ่ม 'สุ่มทุกอย่าง' เพื่อเริ่มสืบคดีค่ะ!"; if (cmd === 'สุ่มซ้ำไหม') reply = "ไม่ซ้ำแน่นอนค่ะ!"; if (cmd === 'ล้างประวัติ') reply = "กดที่ปุ่ม [ล้างทั้งหมด] ด้านล่างนะคะ"; if (cmd === 'ซีซั่น 25') reply = "อัปเดตถึงตอนที่ 12 แล้วค่ะ!"; setTimeout(() => { body.innerHTML += `<div class="msg bot">${reply}</div>`; body.scrollTop = body.scrollHeight; }, 300); }
-    function closeModal() { document.getElementById('updateModal').style.display = 'none'; }
-    function startSpin(fn) { document.getElementById('doorSystem').classList.add('active'); setTimeout(() => { document.getElementById('epDisplay').classList.remove('show'); fn(); }, 500); setTimeout(() => document.getElementById('doorSystem').classList.remove('active'), 1200); setTimeout(() => { document.getElementById('epDisplay').classList.add('show'); document.getElementById('badge').classList.add('show'); }, 1500); }
-    function isDuplicate(text) { return history.some(h => h.text.includes(text)); }
-    function spinEverything() { startSpin(() => { let result = "", badge = "", retry = 0; do { const p = Math.random(); if (p < 0.6) { if (Math.random() < 0.5) { const ep = Math.floor(Math.random() * 981) + 1; const s = Math.ceil(ep / 52); result = `ซีซั่น ${s > 19 ? 19 : s} ตอนที่ ${ep}`; badge = "iQIYI"; } else { const s = Object.keys(tvSeasons)[Math.floor(Math.random() * 6)]; const ep = Math.floor(Math.random() * tvSeasons[s]) + 1; result = `ซีซั่น ${s} ตอนที่ ${ep}`; badge = "TrueVisions"; } } else if (p < 0.9) { const i = Math.floor(Math.random() * movieNames.length); result = `Movie ${i+1}: ${movieNames[i]}`; badge = "เดอะมูฟวี่"; } else { result = Math.random() > 0.5 ? "Lupin III vs Conan (2009)" : "Lupin III vs Conan (2013)"; badge = "ตอนพิเศษ"; } retry++; if(retry > 50) break; } while (isDuplicate(result)); updateUI(result.includes(':') ? `Movie ${result.split(': ')[0].split(' ')[1]} <span>${result.split(': ')[1]}</span>` : result, badge); addH(result); }); }
-    function spinMovie() { startSpin(() => { let res, retry = 0; do { const i = Math.floor(Math.random() * movieNames.length); res = `Movie ${i+1}: ${movieNames[i]}`; retry++; if(retry > 50) break; } while (isDuplicate(res)); updateUI(`Movie ${res.split(': ')[0].split(' ')[1]} <span>${res.split(': ')[1]}</span>`, "เดอะมูฟวี่"); addH(res); }); }
-    function spinLupin() { startSpin(() => { let res = Math.random() > 0.5 ? "Lupin III vs Conan (2009)" : "Lupin III vs Conan (2013)"; if (isDuplicate(res)) res = res.includes("2009") ? "Lupin III vs Conan (2013)" : "Lupin III vs Conan (2009)"; updateUI(res, "ตอนพิเศษ"); addH(res); }); }
-    function spinChar() { startSpin(() => { const c = document.getElementById('charSelect').value; const pool = charData[c]; let res, retry = 0; do { res = pool[Math.floor(Math.random() * pool.length)]; retry++; if(retry > 20) break; } while (isDuplicate(res)); updateUI(res, `ตัวละคร: ${c.toUpperCase()}`); addH(res + ` (${c})`); }); }
-    function updateUI(m, b) { document.getElementById('epDisplay').innerHTML = m; document.getElementById('badge').innerHTML = b; }
-    function addH(t) { history.unshift({ id: Date.now(), text: t, checked: false }); save(); }
-    function toggleC(id) { const i = history.find(h => h.id === id); if(i) i.checked = !i.checked; save(); }
-    function delI(id, e) { e.stopPropagation(); history = history.filter(h => h.id !== id); save(); }
-    function clearAllHistory() { if(confirm("ล้างทั้งหมดจะสุ่มตอนเก่าซ้ำได้อีกครั้ง?")) { history = []; save(); } }
-    function save() { localStorage.setItem('conan_norepeat_v3', JSON.stringify(history)); const l = document.getElementById('historyList'); if(!history.length) { l.innerHTML = '<div style="text-align:center; padding:10px; color:#555;">ไม่มีประวัติ</div>'; return; } l.innerHTML = history.map(h => `<div class="history-item ${h.checked ? 'checked' : ''}" onclick="toggleC(${h.id})"><span>${h.text}</span><div><span style="cursor:pointer;">${h.checked ? '✅' : '⭕'}</span><span class="btn-del" onclick="delI(${h.id}, event)">🗑️</span></div></div>`).join(''); }
-    save();
+    function toggleChat() { const win = document.getElementById('chatWindow'); win.style.display = win.style.display === 'flex' ? 'none' : 'flex'; }
+    function switchTab(type) { document.getElementById('tabMain').classList.toggle('active', type === 'main'); document.getElementById('tabPromo').classList.toggle('active', type === 'promo'); document.getElementById('gridMain').style.display = type === 'main' ? 'grid' : 'none'; document.getElementById('gridPromo').style.display = type === 'promo' ? 'grid' : 'none'; }
+    function botReply(cmd) { const body = document.getElementById('chatBody'); body.innerHTML += `<div class="msg user">${cmd}</div>`; let reply = "กำลังประมวลผล..."; if (cmd === 'วิธีใช้งาน') reply = "กดปุ่มสุ่มได้เลยค่ะ ระบบจะจำตอนที่คุณดูแล้วไว้ในประวัติด้วยนะ!"; if (cmd === 'สุ่มซ้ำไหม') reply = "ไม่ซ้ำ 100% ค่ะ ถ้ายังไม่ล้างประวัติออก"; setTimeout(() => { body.innerHTML += `<div class="msg bot">${reply}</div>`; body.scrollTop = body.scrollHeight; }, 300); }
+    function closeModal() { document.getElementById('updateModal').style.display = 'none'; }
+    function startSpin(fn) { document.getElementById('doorSystem').classList.add('active'); setTimeout(() => { document.getElementById('epDisplay').classList.remove('show'); fn(); }, 500); setTimeout(() => document.getElementById('doorSystem').classList.remove('active'), 1200); setTimeout(() => { document.getElementById('epDisplay').classList.add('show'); document.getElementById('badge').classList.add('show'); }, 1500); }
+    function isDuplicate(text) { return history.some(h => h.text.includes(text)); }
+    function spinEverything() { startSpin(() => { let result = "", badge = "", retry = 0; do { const p = Math.random(); if (p < 0.6) { if (Math.random() < 0.5) { const ep = Math.floor(Math.random() * 981) + 1; const s = Math.ceil(ep / 52); result = `ซีซั่น ${s > 19 ? 19 : s} ตอนที่ ${ep}`; badge = "iQIYI"; } else { const s = Object.keys(tvSeasons)[Math.floor(Math.random() * 6)]; const ep = Math.floor(Math.random() * tvSeasons[s]) + 1; result = `ซีซั่น ${s} ตอนที่ ${ep}`; badge = "TrueVisions"; } } else if (p < 0.9) { const i = Math.floor(Math.random() * movieNames.length); result = `Movie ${i+1}: ${movieNames[i]}`; badge = "เดอะมูฟวี่"; } else { result = Math.random() > 0.5 ? "Lupin III vs Conan (2009)" : "Lupin III vs Conan (2013)"; badge = "ตอนพิเศษ"; } retry++; if(retry > 50) break; } while (isDuplicate(result)); updateUI(result.includes(':') ? `Movie ${result.split(': ')[0].split(' ')[1]} <span>${result.split(': ')[1]}</span>` : result, badge); addH(result); }); }
+    function spinMovie() { startSpin(() => { let res, retry = 0; do { const i = Math.floor(Math.random() * movieNames.length); res = `Movie ${i+1}: ${movieNames[i]}`; retry++; if(retry > 50) break; } while (isDuplicate(res)); updateUI(`Movie ${res.split(': ')[0].split(' ')[1]} <span>${res.split(': ')[1]}</span>`, "เดอะมูฟวี่"); addH(res); }); }
+    function spinLupin() { startSpin(() => { let res = Math.random() > 0.5 ? "Lupin III vs Conan (2009)" : "Lupin III vs Conan (2013)"; updateUI(res, "ตอนพิเศษ"); addH(res); }); }
+    function spinChar() { startSpin(() => { const c = document.getElementById('charSelect').value; const pool = charData[c]; let res = pool[Math.floor(Math.random() * pool.length)]; updateUI(res, `ตัวละคร: ${c.toUpperCase()}`); addH(res + ` (${c})`); }); }
+    function updateUI(m, b) { document.getElementById('epDisplay').innerHTML = m; document.getElementById('badge').innerHTML = b; }
+    function addH(t) { history.unshift({ id: Date.now(), text: t }); save(); }
+    function clearAllHistory() { if(confirm("ล้างประวัติเพื่อเริ่มสุ่มตอนเก่าซ้ำอีกครั้ง?")) { history = []; save(); } }
+    function save() { localStorage.setItem('conan_norepeat_v3', JSON.stringify(history)); const l = document.getElementById('historyList'); if(!history.length) { l.innerHTML = '<div style="text-align:center; padding:10px; color:#555;">ยังไม่มีประวัติ</div>'; return; } l.innerHTML = history.map(h => `<div class="history-item"><span>${h.text}</span></div>`).join(''); }
+    save();
 </script>
 </body>
 </html>
