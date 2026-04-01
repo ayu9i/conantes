@@ -3,33 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conan Hub | Testing V3.5</title>
+    <title>Conan Hub | Testing V3.5 (Self-Destruct)</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        :root { --conan-gold: #d4af37; --glass: rgba(255, 255, 255, 0.08); --danger: #ff4d4d; --success: #4caf50; }
+        :root { --conan-gold: #d4af37; --glass: rgba(255, 255, 255, 0.08); --danger: #ff4d4d; }
         body { margin: 0; font-family: 'Kanit', sans-serif; background: #000; color: white; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding-bottom: 50px; overflow-x: hidden; }
         
-        /* --- แถบประกาศ Testing (เด่นชัด) --- */
-        .test-banner { width: 100%; background: var(--danger); color: white; text-align: center; padding: 8px 0; font-weight: 600; font-size: 0.9rem; position: sticky; top: 0; z-index: 2000; letter-spacing: 1px; box-shadow: 0 2px 10px rgba(255, 77, 77, 0.3); }
+        /* --- แถบประกาศ Testing & Countdown --- */
+        .test-banner { width: 100%; background: var(--danger); color: white; text-align: center; padding: 10px 0; font-weight: 600; font-size: 0.9rem; position: sticky; top: 0; z-index: 2000; box-shadow: 0 4px 15px rgba(255, 77, 77, 0.3); }
+        #countdownBox { font-size: 0.8rem; background: rgba(0,0,0,0.3); padding: 2px 10px; border-radius: 5px; margin-top: 5px; display: inline-block; }
 
-        #updateModal, #surveyModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 3000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
-        .modal-content { background: #111; border: 2px solid var(--conan-gold); border-radius: 20px; padding: 25px; max-width: 400px; width: 85%; text-align: center; max-height: 85vh; overflow-y: auto; }
+        /* --- Self Destruct Overlay --- */
+        #boomOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
+
+        /* --- Survey Modal --- */
+        #surveyModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 3000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(15px); }
+        .survey-content { background: #111; border: 2px solid var(--conan-gold); border-radius: 20px; padding: 25px; max-width: 450px; width: 90%; max-height: 85vh; overflow-y: auto; }
+        .survey-q { text-align: left; margin-bottom: 15px; background: rgba(255,255,255,0.03); padding: 10px; border-radius: 10px; }
+        .survey-q label { display: block; font-size: 0.85rem; color: var(--conan-gold); margin-bottom: 8px; }
+        .survey-input { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #444; background: #222; color: white; font-family: 'Kanit'; box-sizing: border-box; }
+
+        /* --- Original Style remains unchanged --- */
+        #updateModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
+        .modal-content { background: #111; border: 2px solid var(--conan-gold); border-radius: 20px; padding: 25px; max-width: 400px; width: 85%; text-align: center; }
         .update-list { text-align: left; font-size: 0.8rem; background: rgba(255,255,255,0.05); padding: 12px; border-radius: 10px; margin: 15px 0; line-height: 1.5; }
-        
-        /* --- Survey Styles --- */
-        .survey-q { text-align: left; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
-        .survey-q label { display: block; font-size: 0.9rem; color: var(--conan-gold); margin-bottom: 8px; }
-        .survey-input { width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #444; background: #222; color: white; font-family: 'Kanit'; box-sizing: border-box; }
-        .rating-stars { display: flex; justify-content: center; gap: 5px; margin: 10px 0; }
-        .star { cursor: pointer; font-size: 1.5rem; color: #444; transition: 0.2s; }
-        .star.active { color: var(--conan-gold); }
-
-        /* --- Layout System --- */
         .container { width: 100%; max-width: 500px; padding: 20px 15px; text-align: center; transition: max-width 0.3s; }
         .btn-group-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
         @media (min-width: 768px) { .container { max-width: 800px; } .premium-card { padding: 40px; } .btn-group-grid { grid-template-columns: repeat(4, 1fr); } .ep-display { font-size: 2.5rem; } }
-
-        .premium-card { background: var(--glass); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 24px; padding: 20px; backdrop-filter: blur(15px); position: relative; }
+        .premium-card { background: var(--glass); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 24px; padding: 20px; backdrop-filter: blur(15px); }
         .result-container { margin: 10px 0; min-height: 150px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .info-badge { display: inline-block; padding: 4px 12px; background: rgba(212, 175, 55, 0.1); border: 1px solid var(--conan-gold); border-radius: 50px; font-size: 0.8rem; color: var(--conan-gold); margin-bottom: 5px; opacity: 0; transition: 0.3s; }
         .info-badge.show { opacity: 1; }
@@ -67,146 +68,164 @@
         .menu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; padding: 10px; background: #1a1a1a; }
         .menu-item { background: #333; padding: 8px 2px; border-radius: 5px; text-align: center; font-size: 0.7rem; cursor: pointer; transition: 0.2s; border: 1px solid #444; }
         .menu-item:hover { background: var(--conan-gold); color: black; }
-        .survey-btn { position: fixed; top: 60px; right: 10px; background: var(--glass); border: 1px solid var(--conan-gold); color: white; padding: 5px 10px; border-radius: 5px; font-size: 0.7rem; cursor: pointer; z-index: 100; }
     </style>
 </head>
 <body>
 
-<div class="test-banner">⚠️ WARNING: THIS IS A TESTING VERSION (V3.5-BETA) ⚠️</div>
+<div id="boomOverlay">
+    <h1 style="color:var(--danger); font-size: 3rem;">💥 SYSTEM EXPIRED</h1>
+    <p>เวอร์ชั่นทดสอบสิ้นสุดลงแล้ว<br>ขอบคุณที่มาร่วมทดสอบกันนะคะ! รอติดตามอัปเดตครั้งถัดไป</p>
+</div>
 
-<button class="survey-btn" onclick="openSurvey()">📋 ให้คะแนน/ทำแบบสอบถาม</button>
+<div class="test-banner">
+    ⚠️ TESTING VERSION: สำหรับทดสอบระบบและการประเมินผลเท่านั้น ⚠️<br>
+    <div id="countdownBox">ระบบจะทำลายตัวเองในอีก: <span id="timer">--:--:--</span></div>
+</div>
 
-<div id="surveyModal" style="display: none;">
-    <div class="modal-content">
-        <h3 style="color:var(--conan-gold);">แบบสอบถามทดสอบเว็บ</h3>
-        <p style="font-size: 0.7rem; margin-bottom: 20px;">ช่วยเราปรับปรุงให้ดีขึ้นด้วยนะคะ!</p>
-        <div id="surveyForm">
-            <div class="survey-q"><label>1. ชื่อของคุณ</label><input type="text" class="survey-input" placeholder="ระบุชื่อ"></div>
-            <div class="survey-q"><label>2. เพศ</label><select class="survey-input"><option>ชาย</option><option>หญิง</option><option>LGBTQ+</option><option>ไม่ระบุ</option></select></div>
-            <div class="survey-q"><label>3. อายุ</label><input type="number" class="survey-input" placeholder="ระบุอายุ"></div>
-            <div class="survey-q"><label>4. คุณใช้เว็บนี้บ่อยแค่ไหน?</label><select class="survey-input"><option>ครั้งแรก</option><option>นานๆ ที</option><option>บ่อยมาก</option></select></div>
-            <div class="survey-q"><label>5. ความเร็วในการสุ่ม (1-5)</label><div class="rating-stars" id="rate1"></div></div>
-            <div class="survey-q"><label>6. ความสวยงามของ UI (1-5)</label><div class="rating-stars" id="rate2"></div></div>
-            <div class="survey-q"><label>7. ระบบประวัติมีประโยชน์ไหม?</label><select class="survey-input"><option>มีประโยชน์มาก</option><option>เฉยๆ</option><option>ไม่จำเป็น</option></select></div>
-            <div class="survey-q"><label>8. อยากให้เพิ่มตัวละครไหนอีก?</label><input type="text" class="survey-input" placeholder="เช่น รัน, โมริ"></div>
-            <div class="survey-q"><label>9. พบปัญหาการใช้งานหรือไม่?</label><input type="text" class="survey-input" placeholder="ระบุปัญหา"></div>
-            <div class="survey-q"><label>10. คะแนนรวมความพึงพอใจ</label><div class="rating-stars" id="rate3"></div></div>
-            <button class="btn-main btn-gold" onclick="submitSurvey()">ส่งข้อมูล</button>
-            <button class="btn-main btn-dark" onclick="closeSurvey()">ปิด</button>
-        </div>
+<div id="surveyModal">
+    <div class="survey-content">
+        <h3 style="color:var(--conan-gold); text-align: center;">📋 แบบสอบถามนักสืบ (10 ข้อ)</h3>
+        <div class="survey-q"><label>1. ชื่อนักสืบของคุณ</label><input type="text" class="survey-input" placeholder="ระบุชื่อ"></div>
+        <div class="survey-q"><label>2. เพศ</label><select class="survey-input"><option>ชาย</option><option>หญิง</option><option>LGBTQ+</option><option>ไม่ระบุ</option></select></div>
+        <div class="survey-q"><label>3. อายุ</label><input type="number" class="survey-input" placeholder="ระบุอายุ"></div>
+        <div class="survey-q"><label>4. คุณชอบดูโคนันซีซั่นไหนมากที่สุด?</label><input type="text" class="survey-input" placeholder="เช่น ซีซั่น 15"></div>
+        <div class="survey-q"><label>5. ระบบสุ่มแบบ Anti-Repeat ใช้งานง่ายไหม?</label><select class="survey-input"><option>ง่ายมาก</option><option>ปานกลาง</option><option>งงนิดหน่อย</option></select></div>
+        <div class="survey-q"><label>6. ความสวยงามของหน้าเว็บ (1-10 คะแนน)</label><input type="number" class="survey-input" min="1" max="10"></div>
+        <div class="survey-q"><label>7. ความเร็วในการเปิดหน้าเว็บ</label><select class="survey-input"><option>เร็วทันใจ</option><option>ปกติ</option><option>ช้าเล็กน้อย</option></select></div>
+        <div class="survey-q"><label>8. อยากให้เพิ่มตัวละครไหนในระบบสุ่มอีก?</label><input type="text" class="survey-input" placeholder="เช่น รัน, เซระ"></div>
+        <div class="survey-q"><label>9. คุณพบ Bug หรือจุดที่ต้องแก้ตรงไหนไหม?</label><input type="text" class="survey-input" placeholder="ระบุข้อบกพร่อง"></div>
+        <div class="survey-q"><label>10. คะแนนความพึงพอใจโดยรวม (1-10)</label><input type="number" class="survey-input" min="1" max="10"></div>
+        <button class="btn-main btn-gold" onclick="closeSurvey()">ส่งแบบสอบถาม</button>
     </div>
 </div>
 
 <div id="updateModal">
-    <div class="modal-content">
-        <h3>📢 TESTING VERSION V3.5</h3>
-        <div class="update-list">
-            • <b>Test Only:</b> เวอร์ชันนี้ใช้เพื่อการทดสอบระบบภายในเท่านั้น<br>
-            • <b>Responsive:</b> รองรับการแสดงผลทั้งคอมและมือถือ<br>
-            • <b>Season 25:</b> อัปเดตข้อมูลถึงตอนล่าสุดแล้ว!<br>
-            • <b>Survey System:</b> เพิ่มระบบแบบสอบถามประเมินผล
-        </div>
-        <button class="btn-main btn-gold" onclick="closeModal()">รับทราบและเข้าสู่หน้าหลัก</button>
-    </div>
+    <div class="modal-content">
+        <h3>📢 ประกาศเวอร์ชันทดสอบ V3.5</h3>
+        <div class="update-list">
+            • <b>Test Mode:</b> ระบบเปิดให้ทดสอบถึงวันเสาร์ 20.59 น.<br>
+            • <b>Survey:</b> รบกวนทำแบบสอบถามเพื่อนำคะแนนไปพัฒนานะคะ<br>
+            • <b>Self-Destruct:</b> ระบบจะระเบิดตัวเองอัตโนมัติเมื่อหมดเวลา<br>
+            • <b>New:</b> เพิ่มระบบนับถอยหลังที่แถบด้านบน
+        </div>
+        <button class="btn-main btn-gold" onclick="closeModal()">รับทราบและเริ่มทดสอบ!</button>
+    </div>
 </div>
 
 <div class="door-container" id="doorSystem"><div class="door door-left"></div><div class="door door-right"></div></div>
 
 <div class="container">
-    <h2 style="letter-spacing: 2px;">CONAN HUB <small style="font-size: 0.5rem; vertical-align: middle; color: var(--danger);">[TEST]</small></h2>
-    <div class="premium-card">
-        <div id="badge" class="info-badge">พร้อมสืบคดี...</div>
-        <div class="result-container"><h2 id="epDisplay" class="ep-display">สุ่มตอนที่ไม่เคยดูได้เลย!</h2></div>
-        
-        <div class="btn-group-grid">
-            <button class="btn-main btn-gold" style="grid-column: span 2;" onclick="spinEverything()">สุ่มทุกอย่าง</button>
-            <button class="btn-main btn-dark" onclick="spinMovie()">มูฟวี่ 1-28</button>
-            <button class="btn-main btn-dark" onclick="spinLupin()">ปะทะ ลูแปง</button>
-        </div>
+    <h2 style="letter-spacing: 2px;">CONAN HUB <small style="font-size: 0.5rem; color: var(--danger);">[TESTING]</small></h2>
+    <div class="premium-card">
+        <div id="badge" class="info-badge">พร้อมสืบคดี...</div>
+        <div class="result-container"><h2 id="epDisplay" class="ep-display">สุ่มตอนที่ไม่เคยดูได้เลย!</h2></div>
+        
+        <div class="btn-group-grid">
+            <button class="btn-main btn-gold" style="grid-column: span 2;" onclick="spinEverything()">สุ่มทุกอย่าง</button>
+            <button class="btn-main btn-dark" onclick="spinMovie()">มูฟวี่ 1-28</button>
+            <button class="btn-main btn-dark" onclick="spinLupin()">ปะทะ ลูแปง</button>
+        </div>
 
-        <div class="btn-group-grid">
-            <div style="grid-column: span 2;">
-                <select id="charSelect">
-                    <option value="kid">จอมโจรคิด 🎩</option>
-                    <option value="ai">ไฮบาระ ไอ 🧪</option>
-                    <option value="amuro">อามุโร่ ☕</option>
-                    <option value="akai">อากาอิ 🔫</option>
-                </select>
-            </div>
-            <button class="btn-main" style="background:none; border:1px solid var(--conan-gold); color:white; grid-column: span 2;" onclick="spinChar()">สุ่มตามตัวละคร</button>
-        </div>
+        <div class="btn-group-grid">
+            <div style="grid-column: span 2;">
+                <select id="charSelect">
+                    <option value="kid">จอมโจรคิด 🎩</option>
+                    <option value="ai">ไฮบาระ ไอ 🧪</option>
+                    <option value="amuro">อามุโร่ ☕</option>
+                    <option value="akai">อากาอิ 🔫</option>
+                </select>
+            </div>
+            <button class="btn-main" style="background:none; border:1px solid var(--conan-gold); color:white; grid-column: span 2;" onclick="spinChar()">สุ่มตามตัวละคร</button>
+        </div>
 
-        <div class="history-card">
-            <div class="history-title">ประวัติ (ห้ามสุ่มซ้ำ) <span onclick="clearAllHistory()" style="cursor:pointer; opacity:0.6;">[ล้างทั้งหมด]</span></div>
-            <div id="historyList" class="history-list"><div style="text-align:center; padding:10px; color:#555;">ยังไม่มีประวัติ</div></div>
-        </div>
-    </div>
+        <div class="history-card">
+            <div class="history-title">ประวัติ (ห้ามสุ่มซ้ำ) <span onclick="clearAllHistory()" style="cursor:pointer; opacity:0.6;">[ล้างทั้งหมด]</span></div>
+            <div id="historyList" class="history-list"><div style="text-align:center; padding:10px; color:#555;">ยังไม่มีประวัติ</div></div>
+        </div>
+
+        <button class="btn-main" style="margin-top:20px; font-size: 0.8rem; background: rgba(255,255,255,0.05); color: #888;" onclick="openSurvey()">📋 ทำแบบสอบถามการใช้งาน</button>
+    </div>
 </div>
 
 <div id="chatBtn" onclick="toggleChat()">🔍</div>
 <div id="chatWindow">
-    <div class="chat-header">ผู้ช่วยนักสืบ (Rich Menu)</div>
-    <div class="chat-body" id="chatBody">
-        <div class="msg bot">สวัสดีค่ะ! เลือกเมนูที่ด้านล่างเพื่อสอบถามได้เลยนะคะ</div>
-    </div>
-    <div class="rich-menu-container">
-        <div class="menu-tabs">
-            <div class="tab active" id="tabMain" onclick="switchTab('main')">เมนูหลัก</div>
-            <div class="tab" id="tabPromo" onclick="switchTab('promo')">ฟีเจอร์ใหม่</div>
-        </div>
-        <div id="gridMain" class="menu-grid">
-            <div class="menu-item" onclick="botReply('วิธีใช้งาน')">วิธีใช้งาน</div>
-            <div class="menu-item" onclick="botReply('สุ่มซ้ำไหม')">สุ่มซ้ำไหม</div>
-            <div class="menu-item" onclick="botReply('ล้างประวัติ')">ล้างประวัติ</div>
-        </div>
-        <div id="gridPromo" class="menu-grid" style="display:none;">
-            <div class="menu-item" onclick="botReply('ซีซั่น 25')">ซีซั่น 25</div>
-            <div class="menu-item" onclick="botReply('จำนวน Movie')">จำนวน Movie</div>
-            <div class="menu-item" onclick="botReply('ติดต่อแอดมิน')">ผู้สร้าง</div>
-        </div>
-    </div>
+    <div class="chat-header">ผู้ช่วยนักสืบ (Rich Menu)</div>
+    <div class="chat-body" id="chatBody">
+        <div class="msg bot">สวัสดีค่ะ! เลือกเมนูที่ด้านล่างเพื่อสอบถามได้เลยนะคะ</div>
+    </div>
+    <div class="rich-menu-container">
+        <div class="menu-tabs">
+            <div class="tab active" id="tabMain" onclick="switchTab('main')">เมนูหลัก</div>
+            <div class="tab" id="tabPromo" onclick="switchTab('promo')">ฟีเจอร์ใหม่</div>
+        </div>
+        <div id="gridMain" class="menu-grid">
+            <div class="menu-item" onclick="botReply('วิธีใช้งาน')">วิธีใช้งาน</div>
+            <div class="menu-item" onclick="botReply('สุ่มซ้ำไหม')">สุ่มซ้ำไหม</div>
+            <div class="menu-item" onclick="botReply('ล้างประวัติ')">ล้างประวัติ</div>
+        </div>
+        <div id="gridPromo" class="menu-grid" style="display:none;">
+            <div class="menu-item" onclick="botReply('ซีซั่น 25')">ซีซั่น 25</div>
+            <div class="menu-item" onclick="botReply('จำนวน Movie')">จำนวน Movie</div>
+            <div class="menu-item" onclick="botReply('ติดต่อแอดมิน')">ผู้สร้าง</div>
+        </div>
+    </div>
 </div>
 
 <script>
-    const movieNames = ["คดีปริศนาระเบิดระฟ้า", "คดีฆาตกรรมไพ่ปริศนา", "ปริศนาพ่อมดคนสุดท้ายแห่งศตวรรษ", "คดีฆาตกรรมนัยน์ตาปริศนา", "คดีปริศนาเส้นตายสู่สวรรค์", "ปริศนาบนถนนสายมรณะ", "คดีฆาตกรรมแห่งเมืองปริศนา", "มนตราแห่งรัตติกาลสีเงิน", "ยุทธการเหนือห้วงทะเลลึก", "บทเพลงมรณะแด่เหล่าเหล่านักสืบ", "ปริศนามหาขุมทรัพย์โจรสลัด", "บทเพลงแห่งความตาย", "ปริศนานักฆ่าทรยศ", "ปริศนามรณะเหนือน่านฟ้า", "15 นาทีเฉียดตายไขปริศนามรณะ", "ภาคระทึกขวัญยุทธจักรลูกหนัง", "ฝ่าวิกฤติเรือรบมรณะ", "ปริศนากระสุนมรณะ", "ปริศนาทานตะวันมรณะ", "ปริศนารัตติกาลทมิฬ", "ปริศนาเพลงกลอนซ่อนรัก", "ปฏิบัติการสายลับศูนย์", "ศึกชิงอัญมณีสีคราม", "กระสุนสีเพลิง", "เจ้าสาวฮาโลวีน", "มฤตยูใต้น้ำทมิฬ", "ปริศนาปราการห้าแฉก", "ปริศนาภาพติดตามรณะ"];
-    const charData = { kid: ["ซีซั่น 1 ตอนที่ 78", "ซีซั่น 3 ตอนที่ 139", "ซีซั่น 5 ตอนที่ 235", "ซีซั่น 8 ตอนที่ 381", "ซีซั่น 10 ตอนที่ 512"], ai: ["ซีซั่น 3 ตอนที่ 136", "ซีซั่น 4 ตอนที่ 148", "ซีซั่น 5 ตอนที่ 190", "ซีซั่น 7 ตอนที่ 298"], amuro: ["ซีซั่น 15 ตอนที่ 719", "ซีซั่น 16 ตอนที่ 751", "ซีซั่น 18 ตอนที่ 832"], akai: ["ซีซั่น 6 ตอนที่ 249", "ซีซั่น 7 ตอนที่ 277", "ซีซั่น 12 ตอนที่ 538"] };
-    const tvSeasons = { 20: 52, 21: 52, 22: 52, 23: 53, 24: 52, 25: 12 };
-    let history = JSON.parse(localStorage.getItem('conan_norepeat_v3')) || [];
+    // --- Self Destruct & Countdown Logic ---
+    function updateTimer() {
+        const now = new Date();
+        const dest = new Date();
+        
+        // เซ็ตไปวันเสาร์ถัดไป
+        dest.setDate(now.getDate() + (6 - now.getDay() + 7) % 7);
+        dest.setHours(20, 59, 0, 0);
 
-    // Survey Logic
-    function openSurvey() { document.getElementById('surveyModal').style.display = 'flex'; }
-    function closeSurvey() { document.getElementById('surveyModal').style.display = 'none'; }
-    function createStars(containerId) {
-        const cont = document.getElementById(containerId);
-        for(let i=1; i<=5; i++) {
-            const s = document.createElement('span'); s.innerHTML = '★'; s.className = 'star';
-            s.onclick = function() {
-                Array.from(cont.children).forEach((star, idx) => { star.classList.toggle('active', idx < i); });
-            };
-            cont.appendChild(s);
+        // ถ้าวันนี้เลยวันเสาร์ 20.59 ไปแล้ว ให้ไปเสาร์หน้า
+        if (now > dest) dest.setDate(dest.getDate() + 7);
+
+        const diff = dest - now;
+        
+        if (diff <= 0) {
+            document.getElementById('boomOverlay').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            return;
         }
-    }
-    createStars('rate1'); createStars('rate2'); createStars('rate3');
-    function submitSurvey() { alert('ขอบคุณที่ร่วมการทดสอบ! ข้อมูลของคุณถูกบันทึกแล้ว (จำลอง)'); closeSurvey(); }
 
-    // Core Logic (Original)
-    function toggleChat() { const win = document.getElementById('chatWindow'); win.style.display = win.style.display === 'flex' ? 'none' : 'flex'; }
-    function switchTab(type) { document.getElementById('tabMain').classList.toggle('active', type === 'main'); document.getElementById('tabPromo').classList.toggle('active', type === 'promo'); document.getElementById('gridMain').style.display = type === 'main' ? 'grid' : 'none'; document.getElementById('gridPromo').style.display = type === 'promo' ? 'grid' : 'none'; }
-    function botReply(cmd) { const body = document.getElementById('chatBody'); body.innerHTML += `<div class="msg user">${cmd}</div>`; let reply = "กำลังประมวลผล..."; if (cmd === 'วิธีใช้งาน') reply = "กดปุ่มสุ่มได้เลยค่ะ!"; if (cmd === 'สุ่มซ้ำไหม') reply = "ไม่ซ้ำแน่นอนค่ะ!"; if (cmd === 'ล้างประวัติ') reply = "กดปุ่มล้างประวัติได้เลยนะคะ"; setTimeout(() => { body.innerHTML += `<div class="msg bot">${reply}</div>`; body.scrollTop = body.scrollHeight; }, 300); }
-    function closeModal() { document.getElementById('updateModal').style.display = 'none'; }
-    function startSpin(fn) { document.getElementById('doorSystem').classList.add('active'); setTimeout(() => { document.getElementById('epDisplay').classList.remove('show'); fn(); }, 500); setTimeout(() => document.getElementById('doorSystem').classList.remove('active'), 1200); setTimeout(() => { document.getElementById('epDisplay').classList.add('show'); document.getElementById('badge').classList.add('show'); }, 1500); }
-    function isDuplicate(text) { return history.some(h => h.text.includes(text)); }
-    function spinEverything() { startSpin(() => { let result = "", badge = "", retry = 0; do { const p = Math.random(); if (p < 0.6) { if (Math.random() < 0.5) { const ep = Math.floor(Math.random() * 981) + 1; const s = Math.ceil(ep / 52); result = `ซีซั่น ${s > 19 ? 19 : s} ตอนที่ ${ep}`; badge = "iQIYI"; } else { const s = Object.keys(tvSeasons)[Math.floor(Math.random() * 6)]; const ep = Math.floor(Math.random() * tvSeasons[s]) + 1; result = `ซีซั่น ${s} ตอนที่ ${ep}`; badge = "TrueVisions"; } } else if (p < 0.9) { const i = Math.floor(Math.random() * movieNames.length); result = `Movie ${i+1}: ${movieNames[i]}`; badge = "เดอะมูฟวี่"; } else { result = Math.random() > 0.5 ? "Lupin III vs Conan (2009)" : "Lupin III vs Conan (2013)"; badge = "ตอนพิเศษ"; } retry++; if(retry > 50) break; } while (isDuplicate(result)); updateUI(result.includes(':') ? `Movie ${result.split(': ')[0].split(' ')[1]} <span>${result.split(': ')[1]}</span>` : result, badge); addH(result); }); }
-    function spinMovie() { startSpin(() => { let res, retry = 0; do { const i = Math.floor(Math.random() * movieNames.length); res = `Movie ${i+1}: ${movieNames[i]}`; retry++; if(retry > 50) break; } while (isDuplicate(res)); updateUI(`Movie ${res.split(': ')[0].split(' ')[1]} <span>${res.split(': ')[1]}</span>`, "เดอะมูฟวี่"); addH(res); }); }
-    function spinLupin() { startSpin(() => { let res = Math.random() > 0.5 ? "Lupin III vs Conan (2009)" : "Lupin III vs Conan (2013)"; if (isDuplicate(res)) res = res.includes("2009") ? "Lupin III vs Conan (2013)" : "Lupin III vs Conan (2009)"; updateUI(res, "ตอนพิเศษ"); addH(res); }); }
-    function spinChar() { startSpin(() => { const c = document.getElementById('charSelect').value; const pool = charData[c]; let res, retry = 0; do { res = pool[Math.floor(Math.random() * pool.length)]; retry++; if(retry > 20) break; } while (isDuplicate(res)); updateUI(res, `ตัวละคร: ${c.toUpperCase()}`); addH(res + ` (${c})`); }); }
-    function updateUI(m, b) { document.getElementById('epDisplay').innerHTML = m; document.getElementById('badge').innerHTML = b; }
-    function addH(t) { history.unshift({ id: Date.now(), text: t, checked: false }); save(); }
-    function toggleC(id) { const i = history.find(h => h.id === id); if(i) i.checked = !i.checked; save(); }
-    function delI(id, e) { e.stopPropagation(); history = history.filter(h => h.id !== id); save(); }
-    function clearAllHistory() { if(confirm("ล้างทั้งหมดจะสุ่มตอนเก่าซ้ำได้อีกครั้ง?")) { history = []; save(); } }
-    function save() { localStorage.setItem('conan_norepeat_v3', JSON.stringify(history)); const l = document.getElementById('historyList'); if(!history.length) { l.innerHTML = '<div style="text-align:center; padding:10px; color:#555;">ไม่มีประวัติ</div>'; return; } l.innerHTML = history.map(h => `<div class="history-item ${h.checked ? 'checked' : ''}" onclick="toggleC(${h.id})"><span>${h.text}</span><div><span style="cursor:pointer;">${h.checked ? '✅' : '⭕'}</span><span class="btn-del" onclick="delI(${h.id}, event)">🗑️</span></div></div>`).join(''); }
-    save();
+        const h = Math.floor(diff / (1000 * 60 * 60));
+        const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const s = Math.floor((diff % (1000 * 60)) / 1000);
+        document.getElementById('timer').innerText = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+        
+        setTimeout(updateTimer, 1000);
+    }
+    updateTimer();
+
+    function openSurvey() { document.getElementById('surveyModal').style.display = 'flex'; }
+    function closeSurvey() { alert('บันทึกข้อมูลเรียบร้อย! ขอบคุณที่ร่วมทดสอบนะคะ'); document.getElementById('surveyModal').style.display = 'none'; }
+
+    const movieNames = ["คดีปริศนาระเบิดระฟ้า", "คดีฆาตกรรมไพ่ปริศนา", "ปริศนาพ่อมดคนสุดท้ายแห่งศตวรรษ", "คดีฆาตกรรมนัยน์ตาปริศนา", "คดีปริศนาเส้นตายสู่สวรรค์", "ปริศนาบนถนนสายมรณะ", "คดีฆาตกรรมแห่งเมืองปริศนา", "มนตราแห่งรัตติกาลสีเงิน", "ยุทธการเหนือห้วงทะเลลึก", "บทเพลงมรณะแด่เหล่าเหล่านักสืบ", "ปริศนามหาขุมทรัพย์โจรสลัด", "บทเพลงแห่งความตาย", "ปริศนานักฆ่าทรยศ", "ปริศนามรณะเหนือน่านฟ้า", "15 นาทีเฉียดตายไขปริศนามรณะ", "ภาคระทึกขวัญยุทธจักรลูกหนัง", "ฝ่าวิกฤติเรือรบมรณะ", "ปริศนากระสุนมรณะ", "ปริศนาทานตะวันมรณะ", "ปริศนารัตติกาลทมิฬ", "ปริศนาเพลงกลอนซ่อนรัก", "ปฏิบัติการสายลับศูนย์", "ศึกชิงอัญมณีสีคราม", "กระสุนสีเพลิง", "เจ้าสาวฮาโลวีน", "มฤตยูใต้น้ำทมิฬ", "ปริศนาปราการห้าแฉก", "ปริศนาภาพติดตามรณะ"];
+    const charData = { kid: ["ซีซั่น 1 ตอนที่ 78", "ซีซั่น 3 ตอนที่ 139", "ซีซั่น 5 ตอนที่ 235", "ซีซั่น 8 ตอนที่ 381", "ซีซั่น 10 ตอนที่ 512"], ai: ["ซีซั่น 3 ตอนที่ 136", "ซีซั่น 4 ตอนที่ 148", "ซีซั่น 5 ตอนที่ 190", "ซีซั่น 7 ตอนที่ 298"], amuro: ["ซีซั่น 15 ตอนที่ 719", "ซีซั่น 16 ตอนที่ 751", "ซีซั่น 18 ตอนที่ 832"], akai: ["ซีซั่น 6 ตอนที่ 249", "ซีซั่น 7 ตอนที่ 277", "ซีซั่น 12 ตอนที่ 538"] };
+    const tvSeasons = { 20: 52, 21: 52, 22: 52, 23: 53, 24: 52, 25: 12 };
+    let history = JSON.parse(localStorage.getItem('conan_norepeat_v3')) || [];
+
+    function toggleChat() { const win = document.getElementById('chatWindow'); win.style.display = win.style.display === 'flex' ? 'none' : 'flex'; }
+    function switchTab(type) { document.getElementById('tabMain').classList.toggle('active', type === 'main'); document.getElementById('tabPromo').classList.toggle('active', type === 'promo'); document.getElementById('gridMain').style.display = type === 'main' ? 'grid' : 'none'; document.getElementById('gridPromo').style.display = type === 'promo' ? 'grid' : 'none'; }
+    function botReply(cmd) { const body = document.getElementById('chatBody'); body.innerHTML += `<div class="msg user">${cmd}</div>`; let reply = "กำลังประมวลผลค่ะ..."; if (cmd === 'วิธีใช้งาน') reply = "กดปุ่ม 'สุ่มทุกอย่าง' เพื่อเริ่มสืบคดีค่ะ!"; if (cmd === 'สุ่มซ้ำไหม') reply = "ไม่ซ้ำแน่นอนค่ะ!"; if (cmd === 'ล้างประวัติ') reply = "กดที่ปุ่ม [ล้างทั้งหมด] ด้านล่างนะคะ"; if (cmd === 'ซีซั่น 25') reply = "อัปเดตถึงตอนที่ 12 แล้วค่ะ!"; setTimeout(() => { body.innerHTML += `<div class="msg bot">${reply}</div>`; body.scrollTop = body.scrollHeight; }, 300); }
+    function closeModal() { document.getElementById('updateModal').style.display = 'none'; }
+    function startSpin(fn) { document.getElementById('doorSystem').classList.add('active'); setTimeout(() => { document.getElementById('epDisplay').classList.remove('show'); fn(); }, 500); setTimeout(() => document.getElementById('doorSystem').classList.remove('active'), 1200); setTimeout(() => { document.getElementById('epDisplay').classList.add('show'); document.getElementById('badge').classList.add('show'); }, 1500); }
+    function isDuplicate(text) { return history.some(h => h.text.includes(text)); }
+    function spinEverything() { startSpin(() => { let result = "", badge = "", retry = 0; do { const p = Math.random(); if (p < 0.6) { if (Math.random() < 0.5) { const ep = Math.floor(Math.random() * 981) + 1; const s = Math.ceil(ep / 52); result = `ซีซั่น ${s > 19 ? 19 : s} ตอนที่ ${ep}`; badge = "iQIYI"; } else { const s = Object.keys(tvSeasons)[Math.floor(Math.random() * 6)]; const ep = Math.floor(Math.random() * tvSeasons[s]) + 1; result = `ซีซั่น ${s} ตอนที่ ${ep}`; badge = "TrueVisions"; } } else if (p < 0.9) { const i = Math.floor(Math.random() * movieNames.length); result = `Movie ${i+1}: ${movieNames[i]}`; badge = "เดอะมูฟวี่"; } else { result = Math.random() > 0.5 ? "Lupin III vs Conan (2009)" : "Lupin III vs Conan (2013)"; badge = "ตอนพิเศษ"; } retry++; if(retry > 50) break; } while (isDuplicate(result)); updateUI(result.includes(':') ? `Movie ${result.split(': ')[0].split(' ')[1]} <span>${result.split(': ')[1]}</span>` : result, badge); addH(result); }); }
+    function spinMovie() { startSpin(() => { let res, retry = 0; do { const i = Math.floor(Math.random() * movieNames.length); res = `Movie ${i+1}: ${movieNames[i]}`; retry++; if(retry > 50) break; } while (isDuplicate(res)); updateUI(`Movie ${res.split(': ')[0].split(' ')[1]} <span>${res.split(': ')[1]}</span>`, "เดอะมูฟวี่"); addH(res); }); }
+    function spinLupin() { startSpin(() => { let res = Math.random() > 0.5 ? "Lupin III vs Conan (2009)" : "Lupin III vs Conan (2013)"; if (isDuplicate(res)) res = res.includes("2009") ? "Lupin III vs Conan (2013)" : "Lupin III vs Conan (2009)"; updateUI(res, "ตอนพิเศษ"); addH(res); }); }
+    function spinChar() { startSpin(() => { const c = document.getElementById('charSelect').value; const pool = charData[c]; let res, retry = 0; do { res = pool[Math.floor(Math.random() * pool.length)]; retry++; if(retry > 20) break; } while (isDuplicate(res)); updateUI(res, `ตัวละคร: ${c.toUpperCase()}`); addH(res + ` (${c})`); }); }
+    function updateUI(m, b) { document.getElementById('epDisplay').innerHTML = m; document.getElementById('badge').innerHTML = b; }
+    function addH(t) { history.unshift({ id: Date.now(), text: t, checked: false }); save(); }
+    function toggleC(id) { const i = history.find(h => h.id === id); if(i) i.checked = !i.checked; save(); }
+    function delI(id, e) { e.stopPropagation(); history = history.filter(h => h.id !== id); save(); }
+    function clearAllHistory() { if(confirm("ล้างทั้งหมดจะสุ่มตอนเก่าซ้ำได้อีกครั้ง?")) { history = []; save(); } }
+    function save() { localStorage.setItem('conan_norepeat_v3', JSON.stringify(history)); const l = document.getElementById('historyList'); if(!history.length) { l.innerHTML = '<div style="text-align:center; padding:10px; color:#555;">ไม่มีประวัติ</div>'; return; } l.innerHTML = history.map(h => `<div class="history-item ${h.checked ? 'checked' : ''}" onclick="toggleC(${h.id})"><span>${h.text}</span><div><span style="cursor:pointer;">${h.checked ? '✅' : '⭕'}</span><span class="btn-del" onclick="delI(${h.id}, event)">🗑️</span></div></div>`).join(''); }
+    save();
 </script>
 </body>
 </html>
