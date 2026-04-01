@@ -3,43 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conan Hub | Testing V3.5</title>
+    <title>Conan Hub | Anti-Repeat V3.5</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root { --conan-gold: #d4af37; --glass: rgba(255, 255, 255, 0.08); --danger: #ff4d4d; }
         body { margin: 0; font-family: 'Kanit', sans-serif; background: #000; color: white; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding-bottom: 50px; overflow-x: hidden; }
         
-        /* --- แถบประกาศเวอร์ชันทดสอบ --- */
-        .test-banner {
-            width: 100%;
-            background: #ff4d4d;
-            color: white;
-            text-align: center;
-            padding: 5px 0;
-            font-size: 0.8rem;
-            font-weight: 600;
-            position: sticky;
-            top: 0;
-            z-index: 2000;
-            letter-spacing: 1px;
-        }
-
-        /* --- ระบบล็อค Key Access --- */
-        #lockScreen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; z-index: 3000; display: flex; align-items: center; justify-content: center;
-            flex-direction: column; text-align: center;
-        }
-        .lock-box { width: 80%; max-width: 320px; padding: 30px; border: 2px solid var(--conan-gold); border-radius: 20px; background: #111; }
-        .input-key {
-            width: 100%; padding: 12px; margin: 15px 0; border-radius: 8px; border: 1px solid #444;
-            background: #222; color: white; text-align: center; font-size: 1.1rem; box-sizing: border-box;
-        }
-
         #updateModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
         .modal-content { background: #111; border: 2px solid var(--conan-gold); border-radius: 20px; padding: 25px; max-width: 400px; width: 85%; text-align: center; }
         .update-list { text-align: left; font-size: 0.8rem; background: rgba(255,255,255,0.05); padding: 12px; border-radius: 10px; margin: 15px 0; line-height: 1.5; }
-        .container { width: 100%; max-width: 500px; padding: 20px 15px; text-align: center; }
+        
+        /* --- Layout System (Desktop vs Mobile) --- */
+        .container { width: 100%; max-width: 500px; padding: 20px 15px; text-align: center; transition: max-width 0.3s; }
+        .btn-group-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        
+        @media (min-width: 768px) {
+            .container { max-width: 800px; }
+            .premium-card { padding: 40px; }
+            .btn-group-grid { grid-template-columns: repeat(4, 1fr); }
+            .ep-display { font-size: 2.5rem; }
+        }
+
         .premium-card { background: var(--glass); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 24px; padding: 20px; backdrop-filter: blur(15px); }
         .result-container { margin: 10px 0; min-height: 150px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .info-badge { display: inline-block; padding: 4px 12px; background: rgba(212, 175, 55, 0.1); border: 1px solid var(--conan-gold); border-radius: 50px; font-size: 0.8rem; color: var(--conan-gold); margin-bottom: 5px; opacity: 0; transition: 0.3s; }
@@ -63,6 +47,7 @@
         .door-container.active .door-right { transform: translateX(-100%); }
         select { background: #111; color: #fff; border: 1px solid #444; padding: 10px; border-radius: 8px; width: 100%; font-family: 'Kanit'; margin-bottom: 8px; }
 
+        /* --- Chatbot Styles --- */
         #chatBtn { position: fixed; bottom: 20px; right: 20px; background: var(--conan-gold); width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.5); z-index: 1001; }
         #chatWindow { position: fixed; bottom: 90px; right: 20px; width: 320px; height: 450px; background: #111; border: 1px solid var(--conan-gold); border-radius: 15px; display: none; flex-direction: column; overflow: hidden; z-index: 1001; box-shadow: 0 5px 25px rgba(0,0,0,0.8); }
         .chat-header { background: var(--conan-gold); color: #000; padding: 12px; font-weight: 600; text-align: center; }
@@ -81,27 +66,13 @@
 </head>
 <body>
 
-<!-- แถบประกาศ -->
-<div class="test-banner">⚠️ คำเตือน: นี่คือเวอร์ชันสำหรับการทดสอบเท่านั้น (TESTING VERSION)</div>
-
-<!-- ระบบล็อคคีย์ -->
-<div id="lockScreen">
-    <div class="lock-box">
-        <h2 style="color: var(--conan-gold); margin: 0;">ACCESS REQUIRED</h2>
-        <p style="font-size: 0.8rem; color: #888;">โปรดกรอก Access Key เพื่อเข้าใช้งาน</p>
-        <input type="password" id="accessKey" class="input-key" placeholder="กรอกรหัสผ่านที่นี่">
-        <button class="btn-main btn-gold" onclick="checkKey()">ยืนยันตัวตน</button>
-        <p id="errorMsg" style="color: var(--danger); font-size: 0.8rem; display: none;">รหัสผ่านไม่ถูกต้อง!</p>
-    </div>
-</div>
-
 <div id="updateModal">
     <div class="modal-content">
         <h3>📢 อัปเดตล่าสุด V3.5</h3>
         <div class="update-list">
+            • <b>Responsive:</b> รองรับการแสดงผลทั้งคอมและมือถือ<br>
             • <b>Season 25:</b> เพิ่มตอนที่ 12 ลงในระบบสุ่มแล้ว!<br>
             • <b>ระบบ Chatbot:</b> สงสัยการใช้งานถามบอทได้ที่มุมขวา<br>
-            • <b>Security:</b> เพิ่มระบบ Access Key สำหรับทดสอบ<br>
             • <b>ระบบล็อค:</b> ป้องกันการสุ่มเจอตอนซ้ำเดิม 100%
         </div>
         <button class="btn-main btn-gold" onclick="closeModal()">เข้าสู่หน้าหลัก!</button>
@@ -115,18 +86,25 @@
     <div class="premium-card">
         <div id="badge" class="info-badge">พร้อมสืบคดี...</div>
         <div class="result-container"><h2 id="epDisplay" class="ep-display">สุ่มตอนที่ไม่เคยดูได้เลย!</h2></div>
-        <button class="btn-main btn-gold" onclick="spinEverything()">สุ่มทุกอย่าง (ไม่ซ้ำเดิม)</button>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+        
+        <div class="btn-group-grid">
+            <button class="btn-main btn-gold" style="grid-column: span 2;" onclick="spinEverything()">สุ่มทุกอย่าง</button>
             <button class="btn-main btn-dark" onclick="spinMovie()">มูฟวี่ 1-28</button>
             <button class="btn-main btn-dark" onclick="spinLupin()">ปะทะ ลูแปง</button>
         </div>
-        <select id="charSelect">
-            <option value="kid">จอมโจรคิด 🎩</option>
-            <option value="ai">ไฮบาระ ไอ 🧪</option>
-            <option value="amuro">อามุโร่ ☕</option>
-            <option value="akai">อากาอิ 🔫</option>
-        </select>
-        <button class="btn-main" style="background:none; border:1px solid var(--conan-gold); color:white;" onclick="spinChar()">สุ่มตามตัวละคร</button>
+
+        <div class="btn-group-grid">
+            <div style="grid-column: span 2;">
+                <select id="charSelect">
+                    <option value="kid">จอมโจรคิด 🎩</option>
+                    <option value="ai">ไฮบาระ ไอ 🧪</option>
+                    <option value="amuro">อามุโร่ ☕</option>
+                    <option value="akai">อากาอิ 🔫</option>
+                </select>
+            </div>
+            <button class="btn-main" style="background:none; border:1px solid var(--conan-gold); color:white; grid-column: span 2;" onclick="spinChar()">สุ่มตามตัวละคร</button>
+        </div>
+
         <div class="history-card">
             <div class="history-title">ประวัติ (ห้ามสุ่มซ้ำ) <span onclick="clearAllHistory()" style="cursor:pointer; opacity:0.6;">[ล้างทั้งหมด]</span></div>
             <div id="historyList" class="history-list"><div style="text-align:center; padding:10px; color:#555;">ยังไม่มีประวัติ</div></div>
@@ -159,43 +137,135 @@
 </div>
 
 <script>
-    // --- ระบบตรวจสอบคีย์ ---
-    function checkKey() {
-        const key = document.getElementById('accessKey').value;
-        const correctKey = "CONAN2026"; // <--- เปลี่ยนรหัสผ่านตรงนี้ได้เลยครับ
-        if(key === correctKey) {
-            document.getElementById('lockScreen').style.display = 'none';
-        } else {
-            const err = document.getElementById('errorMsg');
-            err.style.display = 'block';
-            setTimeout(() => { err.style.display = 'none'; }, 2000);
-        }
-    }
-
-    // --- ส่วน Logic เดิม (ห้ามเปลี่ยนแปลง) ---
-    const movieNames = ["คดีปริศนาระเบิดระฟ้า", "คดีฆาตกรรมไพ่ปริศนา", "ปริศนาพ่อมดคนสุดท้ายแห่งศตวรรษ", "คดีฆาตกรรมนัยน์ตาปริศนา", "คดีปริศนาเส้นตายสู่สวรรค์", "ปริศนาบนถนนสายมรณะ", "คดีฆาตกรรมแห่งเมืองปริศนา", "มนตราแห่งรัตติกาลสีเงิน", "ยุทธการเหนือห้วงทะเลลึก", "บทเพลงมรณะแด่เหล่าเหล่านักสืบ", "ปริศนามหาขุมทรัพย์โจรสลัด", "บทเพลงแห่งความตาย", "ปริศนานักฆ่าทรยศ", "ปริศนามรณะเหนือน่านฟ้า", "15 นาทีเฉียดตายไขปริศนามรณะ", "ภาคระทึกขวัญยุทธจักรลูกหนัง", "ฝ่าวิกฤติเรือรบมรณะ", "ปริศนากระสุนมรณะ", "ปริศนาทานตะวันมรณะ", "ปริศนารัตติกาลทมิฬ", "ปริศนาเพลงกลอนซ่อนรัก", "ปฏิบัติการสายลับศูนย์", "ศึกชิงอัญมณีสีคราม", "กระสุนสีเพลิง", "เจ้าสาวฮาโลวีน", "มฤตยูใต้น้ำทมิฬ", "ปริศนาปราการห้าแฉก", "ปริศนาภาพติดตามรณะ"];
-    const charData = { kid: ["ซีซั่น 1 ตอนที่ 78", "ซีซั่น 3 ตอนที่ 139", "ซีซั่น 5 ตอนที่ 235", "ซีซั่น 8 ตอนที่ 381", "ซีซั่น 10 ตอนที่ 512"], ai: ["ซีซั่น 3 ตอนที่ 136", "ซีซั่น 4 ตอนที่ 148", "ซีซั่น 5 ตอนที่ 190", "ซีซั่น 7 ตอนที่ 298"], amuro: ["ซีซั่น 15 ตอนที่ 719", "ซีซั่น 16 ตอนที่ 751", "ซีซั่น 18 ตอนที่ 832"], akai: ["ซีซั่น 6 ตอนที่ 249", "ซีซั่น 7 ตอนที่ 277", "ซีซั่น 12 ตอนที่ 538"] };
+    const movieNames = [
+        "คดีปริศนาระเบิดระฟ้า", "คดีฆาตกรรมไพ่ปริศนา", "ปริศนาพ่อมดคนสุดท้ายแห่งศตวรรษ", "คดีฆาตกรรมนัยน์ตาปริศนา", 
+        "คดีปริศนาเส้นตายสู่สวรรค์", "ปริศนาบนถนนสายมรณะ", "คดีฆาตกรรมแห่งเมืองปริศนา", "มนตราแห่งรัตติกาลสีเงิน", 
+        "ยุทธการเหนือห้วงทะเลลึก", "บทเพลงมรณะแด่เหล่าเหล่านักสืบ", "ปริศนามหาขุมทรัพย์โจรสลัด", "บทเพลงแห่งความตาย", 
+        "ปริศนานักฆ่าทรยศ", "ปริศนามรณะเหนือน่านฟ้า", "15 นาทีเฉียดตายไขปริศนามรณะ", "ภาคระทึกขวัญยุทธจักรลูกหนัง", 
+        "ฝ่าวิกฤติเรือรบมรณะ", "ปริศนากระสุนมรณะ", "ปริศนาทานตะวันมรณะ", "ปริศนารัตติกาลทมิฬ", 
+        "ปริศนาเพลงกลอนซ่อนรัก", "ปฏิบัติการสายลับศูนย์", "ศึกชิงอัญมณีสีคราม", "กระสุนสีเพลิง", 
+        "เจ้าสาวฮาโลวีน", "มฤตยูใต้น้ำทมิฬ", "ปริศนาปราการห้าแฉก", "ปริศนาภาพติดตามรณะ"
+    ];
+    const charData = { 
+        kid: ["ซีซั่น 1 ตอนที่ 78", "ซีซั่น 3 ตอนที่ 139", "ซีซั่น 5 ตอนที่ 235", "ซีซั่น 8 ตอนที่ 381", "ซีซั่น 10 ตอนที่ 512"],
+        ai: ["ซีซั่น 3 ตอนที่ 136", "ซีซั่น 4 ตอนที่ 148", "ซีซั่น 5 ตอนที่ 190", "ซีซั่น 7 ตอนที่ 298"],
+        amuro: ["ซีซั่น 15 ตอนที่ 719", "ซีซั่น 16 ตอนที่ 751", "ซีซั่น 18 ตอนที่ 832"],
+        akai: ["ซีซั่น 6 ตอนที่ 249", "ซีซั่น 7 ตอนที่ 277", "ซีซั่น 12 ตอนที่ 538"]
+    };
     const tvSeasons = { 20: 52, 21: 52, 22: 52, 23: 53, 24: 52, 25: 12 };
     let history = JSON.parse(localStorage.getItem('conan_norepeat_v3')) || [];
 
-    function toggleChat() { const win = document.getElementById('chatWindow'); win.style.display = win.style.display === 'flex' ? 'none' : 'flex'; }
-    function switchTab(type) { document.getElementById('tabMain').classList.toggle('active', type === 'main'); document.getElementById('tabPromo').classList.toggle('active', type === 'promo'); document.getElementById('gridMain').style.display = type === 'main' ? 'grid' : 'none'; document.getElementById('gridPromo').style.display = type === 'promo' ? 'grid' : 'none'; }
-    function botReply(cmd) { const body = document.getElementById('chatBody'); body.innerHTML += `<div class="msg user">${cmd}</div>`; let reply = "กำลังประมวลผลค่ะ..."; if (cmd === 'วิธีใช้งาน') reply = "กดปุ่ม 'สุ่มทุกอย่าง' เพื่อเริ่มสืบคดีค่ะ!"; if (cmd === 'สุ่มซ้ำไหม') reply = "ไม่ซ้ำแน่นอนค่ะ! ระบบ Anti-Repeat ทำงานอยู่"; if (cmd === 'ล้างประวัติ') reply = "กดที่ปุ่ม [ล้างทั้งหมด] ด้านล่างได้เลย"; if (cmd === 'ซีซั่น 25') reply = "อัปเดตเรียบร้อยแล้วค่ะ! มีถึงตอนที่ 12"; if (cmd === 'จำนวน Movie') reply = "มีให้สุ่มถึงภาค 28 ค่ะ"; if (cmd === 'ติดต่อแอดมิน') reply = "เวอร์ชั่นทดสอบ V3.5 ยินดีที่ได้บริการค่ะ!"; setTimeout(() => { body.innerHTML += `<div class="msg bot">${reply}</div>`; body.scrollTop = body.scrollHeight; }, 300); }
+    function toggleChat() {
+        const win = document.getElementById('chatWindow');
+        win.style.display = win.style.display === 'flex' ? 'none' : 'flex';
+    }
+    function switchTab(type) {
+        document.getElementById('tabMain').classList.toggle('active', type === 'main');
+        document.getElementById('tabPromo').classList.toggle('active', type === 'promo');
+        document.getElementById('gridMain').style.display = type === 'main' ? 'grid' : 'none';
+        document.getElementById('gridPromo').style.display = type === 'promo' ? 'grid' : 'none';
+    }
+    function botReply(cmd) {
+        const body = document.getElementById('chatBody');
+        body.innerHTML += `<div class="msg user">${cmd}</div>`;
+        let reply = "กำลังประมวลผลค่ะ...";
+        if (cmd === 'วิธีใช้งาน') reply = "กดปุ่ม 'สุ่มทุกอย่าง' เพื่อเริ่มสืบคดีค่ะ! หรือเลือกสุ่มเฉพาะ Movie และตัวละครที่ชอบได้เลยนะคะ";
+        if (cmd === 'สุ่มซ้ำไหม') reply = "ไม่ซ้ำแน่นอนค่ะ! ระบบ Anti-Repeat จะกักตอนที่เคยสุ่มแล้วไว้ในประวัติ จนกว่าคุณจะล้างมันออกค่ะ";
+        if (cmd === 'ล้างประวัติ') reply = "กดที่ปุ่ม [ล้างทั้งหมด] ในแถบประวัติด้านล่าง เพื่อรีเซ็ตให้สุ่มเจอตอนเก่าๆ ได้อีกครั้งนะคะ";
+        if (cmd === 'ซีซั่น 25') reply = "อัปเดตเรียบร้อยแล้วค่ะ! ตอนนี้มีถึงตอนที่ 12 แล้ว (ข้อมูลล่าสุด V3.5)";
+        if (cmd === 'จำนวน Movie') reply = "มีให้สุ่มตั้งแต่ภาค 1 จนถึงภาค 28 ครบตามรายชื่อล่าสุดเลยค่ะ!";
+        if (cmd === 'ติดต่อแอดมิน') reply = "ฉันคือ AI ผู้ช่วยประจำ Conan Hub V3.5 ยินดีที่ได้บริการนะคะ!";
+        setTimeout(() => { body.innerHTML += `<div class="msg bot">${reply}</div>`; body.scrollTop = body.scrollHeight; }, 300);
+    }
+
     function closeModal() { document.getElementById('updateModal').style.display = 'none'; }
-    function startSpin(fn) { document.getElementById('doorSystem').classList.add('active'); setTimeout(() => { document.getElementById('epDisplay').classList.remove('show'); fn(); }, 500); setTimeout(() => document.getElementById('doorSystem').classList.remove('active'), 1200); setTimeout(() => { document.getElementById('epDisplay').classList.add('show'); document.getElementById('badge').classList.add('show'); }, 1500); }
+    function startSpin(fn) {
+        document.getElementById('doorSystem').classList.add('active');
+        setTimeout(() => { document.getElementById('epDisplay').classList.remove('show'); fn(); }, 500);
+        setTimeout(() => document.getElementById('doorSystem').classList.remove('active'), 1200);
+        setTimeout(() => { document.getElementById('epDisplay').classList.add('show'); document.getElementById('badge').classList.add('show'); }, 1500);
+    }
     function isDuplicate(text) { return history.some(h => h.text.includes(text)); }
-    function spinEverything() { startSpin(() => { let result = "", badge = "", retry = 0; do { const p = Math.random(); if (p < 0.6) { if (Math.random() < 0.5) { const ep = Math.floor(Math.random() * 981) + 1; const s = Math.ceil(ep / 52); result = `ซีซั่น ${s > 19 ? 19 : s} ตอนที่ ${ep}`; badge = "iQIYI"; } else { const s = Object.keys(tvSeasons)[Math.floor(Math.random() * 6)]; const ep = Math.floor(Math.random() * tvSeasons[s]) + 1; result = `ซีซั่น ${s} ตอนที่ ${ep}`; badge = "TrueVisions"; } } else if (p < 0.9) { const i = Math.floor(Math.random() * movieNames.length); result = `Movie ${i+1}: ${movieNames[i]}`; badge = "เดอะมูฟวี่"; } else { result = Math.random() > 0.5 ? "Lupin III vs Conan (2009)" : "Lupin III vs Conan (2013)"; badge = "ตอนพิเศษ"; } retry++; if(retry > 50) break; } while (isDuplicate(result)); updateUI(result.includes(':') ? `Movie ${result.split(': ')[0].split(' ')[1]} <span>${result.split(': ')[1]}</span>` : result, badge); addH(result); }); }
-    function spinMovie() { startSpin(() => { let res, retry = 0; do { const i = Math.floor(Math.random() * movieNames.length); res = `Movie ${i+1}: ${movieNames[i]}`; retry++; if(retry > 50) break; } while (isDuplicate(res)); updateUI(`Movie ${res.split(': ')[0].split(' ')[1]} <span>${res.split(': ')[1]}</span>`, "เดอะมูฟวี่"); addH(res); }); }
-    function spinLupin() { startSpin(() => { let res = Math.random() > 0.5 ? "Lupin III vs Conan (2009)" : "Lupin III vs Conan (2013)"; if (isDuplicate(res)) res = res.includes("2009") ? "Lupin III vs Conan (2013)" : "Lupin III vs Conan (2009)"; updateUI(res, "ตอนพิเศษ"); addH(res); }); }
-    function spinChar() { startSpin(() => { const c = document.getElementById('charSelect').value; const pool = charData[c]; let res, retry = 0; do { res = pool[Math.floor(Math.random() * pool.length)]; retry++; if(retry > 20) break; } while (isDuplicate(res)); updateUI(res, `ตัวละคร: ${c.toUpperCase()}`); addH(res + ` (${c})`); }); }
+    
+    function spinEverything() {
+        startSpin(() => {
+            let result = "", badge = "", retry = 0;
+            do {
+                const p = Math.random();
+                if (p < 0.6) {
+                    if (Math.random() < 0.5) {
+                        const ep = Math.floor(Math.random() * 981) + 1;
+                        const s = Math.ceil(ep / 52);
+                        result = `ซีซั่น ${s > 19 ? 19 : s} ตอนที่ ${ep}`;
+                        badge = "iQIYI";
+                    } else {
+                        const s = Object.keys(tvSeasons)[Math.floor(Math.random() * 6)];
+                        const ep = Math.floor(Math.random() * tvSeasons[s]) + 1;
+                        result = `ซีซั่น ${s} ตอนที่ ${ep}`;
+                        badge = "TrueVisions";
+                    }
+                } else if (p < 0.9) {
+                    const i = Math.floor(Math.random() * movieNames.length);
+                    result = `Movie ${i+1}: ${movieNames[i]}`;
+                    badge = "เดอะมูฟวี่";
+                } else {
+                    result = Math.random() > 0.5 ? "Lupin III vs Conan (2009)" : "Lupin III vs Conan (2013)";
+                    badge = "ตอนพิเศษ";
+                }
+                retry++;
+                if(retry > 50) break;
+            } while (isDuplicate(result));
+            updateUI(result.includes(':') ? `Movie ${result.split(': ')[0].split(' ')[1]} <span>${result.split(': ')[1]}</span>` : result, badge);
+            addH(result);
+        });
+    }
+    function spinMovie() {
+        startSpin(() => {
+            let res, retry = 0;
+            do {
+                const i = Math.floor(Math.random() * movieNames.length);
+                res = `Movie ${i+1}: ${movieNames[i]}`;
+                retry++;
+                if(retry > 50) break;
+            } while (isDuplicate(res));
+            updateUI(`Movie ${res.split(': ')[0].split(' ')[1]} <span>${res.split(': ')[1]}</span>`, "เดอะมูฟวี่");
+            addH(res);
+        });
+    }
+    function spinLupin() {
+        startSpin(() => {
+            let res = Math.random() > 0.5 ? "Lupin III vs Conan (2009)" : "Lupin III vs Conan (2013)";
+            if (isDuplicate(res)) res = res.includes("2009") ? "Lupin III vs Conan (2013)" : "Lupin III vs Conan (2009)";
+            updateUI(res, "ตอนพิเศษ");
+            addH(res);
+        });
+    }
+    function spinChar() {
+        startSpin(() => {
+            const c = document.getElementById('charSelect').value;
+            const pool = charData[c];
+            let res, retry = 0;
+            do {
+                res = pool[Math.floor(Math.random() * pool.length)];
+                retry++;
+                if(retry > 20) break;
+            } while (isDuplicate(res));
+            updateUI(res, `ตัวละคร: ${c.toUpperCase()}`);
+            addH(res + ` (${c})`);
+        });
+    }
     function updateUI(m, b) { document.getElementById('epDisplay').innerHTML = m; document.getElementById('badge').innerHTML = b; }
     function addH(t) { history.unshift({ id: Date.now(), text: t, checked: false }); save(); }
     function toggleC(id) { const i = history.find(h => h.id === id); if(i) i.checked = !i.checked; save(); }
     function delI(id, e) { e.stopPropagation(); history = history.filter(h => h.id !== id); save(); }
     function clearAllHistory() { if(confirm("ล้างทั้งหมดจะสุ่มตอนเก่าซ้ำได้อีกครั้ง?")) { history = []; save(); } }
-    function save() { localStorage.setItem('conan_norepeat_v3', JSON.stringify(history)); const l = document.getElementById('historyList'); if(!history.length) { l.innerHTML = '<div style="text-align:center; padding:10px; color:#555;">ไม่มีประวัติ</div>'; return; } l.innerHTML = history.map(h => `<div class="history-item ${h.checked ? 'checked' : ''}" onclick="toggleC(${h.id})"><span>${h.text}</span><div><span style="cursor:pointer;">${h.checked ? '✅' : '⭕'}</span><span class="btn-del" onclick="delI(${h.id}, event)">🗑️</span></div></div>`).join(''); }
+    function save() {
+        localStorage.setItem('conan_norepeat_v3', JSON.stringify(history));
+        const l = document.getElementById('historyList');
+        if(!history.length) { l.innerHTML = '<div style="text-align:center; padding:10px; color:#555;">ไม่มีประวัติ</div>'; return; }
+        l.innerHTML = history.map(h => `<div class="history-item ${h.checked ? 'checked' : ''}" onclick="toggleC(${h.id})"><span>${h.text}</span><div><span style="cursor:pointer;">${h.checked ? '✅' : '⭕'}</span><span class="btn-del" onclick="delI(${h.id}, event)">🗑️</span></div></div>`).join('');
+    }
     save();
 </script>
 </body>
 </html>
-
