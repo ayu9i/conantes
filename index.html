@@ -3,27 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conan Hub | Anti-Repeat V3.5 (Testing)</title>
+    <title>Conan Hub | Testing V3.5</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root { --conan-gold: #d4af37; --glass: rgba(255, 255, 255, 0.08); --danger: #ff4d4d; }
         body { margin: 0; font-family: 'Kanit', sans-serif; background: #000; color: white; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding-bottom: 50px; overflow-x: hidden; }
         
         /* --- แถบประกาศเวอร์ชันทดสอบ --- */
-        .test-version-banner {
+        .test-banner {
             width: 100%;
-            background: linear-gradient(90deg, #d4af37, #000, #d4af37);
-            color: #fff;
-            padding: 8px 0;
-            font-size: 0.9rem;
+            background: #ff4d4d;
+            color: white;
             text-align: center;
+            padding: 5px 0;
+            font-size: 0.8rem;
             font-weight: 600;
-            letter-spacing: 1px;
-            border-bottom: 2px solid var(--conan-gold);
-            text-shadow: 0 0 10px rgba(212, 175, 55, 0.8);
             position: sticky;
             top: 0;
             z-index: 2000;
+            letter-spacing: 1px;
+        }
+
+        /* --- ระบบล็อค Key Access --- */
+        #lockScreen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 3000; display: flex; align-items: center; justify-content: center;
+            flex-direction: column; text-align: center;
+        }
+        .lock-box { width: 80%; max-width: 320px; padding: 30px; border: 2px solid var(--conan-gold); border-radius: 20px; background: #111; }
+        .input-key {
+            width: 100%; padding: 12px; margin: 15px 0; border-radius: 8px; border: 1px solid #444;
+            background: #222; color: white; text-align: center; font-size: 1.1rem; box-sizing: border-box;
         }
 
         #updateModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
@@ -71,9 +81,18 @@
 </head>
 <body>
 
-<!-- แถบประกาศที่เพิ่มใหม่ -->
-<div class="test-version-banner">
-    ⚠️ เวอร์ชั่นนี้เป็นเวอร์ชั่นสำหรับการทดสอบ (TESTING VERSION ONLY)
+<!-- แถบประกาศ -->
+<div class="test-banner">⚠️ คำเตือน: นี่คือเวอร์ชันสำหรับการทดสอบเท่านั้น (TESTING VERSION)</div>
+
+<!-- ระบบล็อคคีย์ -->
+<div id="lockScreen">
+    <div class="lock-box">
+        <h2 style="color: var(--conan-gold); margin: 0;">ACCESS REQUIRED</h2>
+        <p style="font-size: 0.8rem; color: #888;">โปรดกรอก Access Key เพื่อเข้าใช้งาน</p>
+        <input type="password" id="accessKey" class="input-key" placeholder="กรอกรหัสผ่านที่นี่">
+        <button class="btn-main btn-gold" onclick="checkKey()">ยืนยันตัวตน</button>
+        <p id="errorMsg" style="color: var(--danger); font-size: 0.8rem; display: none;">รหัสผ่านไม่ถูกต้อง!</p>
+    </div>
 </div>
 
 <div id="updateModal">
@@ -82,10 +101,10 @@
         <div class="update-list">
             • <b>Season 25:</b> เพิ่มตอนที่ 12 ลงในระบบสุ่มแล้ว!<br>
             • <b>ระบบ Chatbot:</b> สงสัยการใช้งานถามบอทได้ที่มุมขวา<br>
-            • <b>ทำความสะอาด:</b> ลบแถบประกาศเพื่อเพิ่มพื้นที่หน้าจอ<br>
+            • <b>Security:</b> เพิ่มระบบ Access Key สำหรับทดสอบ<br>
             • <b>ระบบล็อค:</b> ป้องกันการสุ่มเจอตอนซ้ำเดิม 100%
         </div>
-        <button class="btn-main btn-gold" onclick="closeModal()">เข้าสู่หน้าหลัก (Beta)</button>
+        <button class="btn-main btn-gold" onclick="closeModal()">เข้าสู่หน้าหลัก!</button>
     </div>
 </div>
 
@@ -119,7 +138,7 @@
 <div id="chatWindow">
     <div class="chat-header">ผู้ช่วยนักสืบ (Rich Menu)</div>
     <div class="chat-body" id="chatBody">
-        <div class="msg bot">สวัสดีค่ะ! เวอร์ชั่นนี้มีไว้เพื่อทดสอบระบบนะคะ เลือกเมนูเพื่อลองใช้งานได้เลยค่ะ</div>
+        <div class="msg bot">สวัสดีค่ะ! เลือกเมนูที่ด้านล่างเพื่อสอบถามได้เลยนะคะ</div>
     </div>
     <div class="rich-menu-container">
         <div class="menu-tabs">
@@ -140,7 +159,20 @@
 </div>
 
 <script>
-    // โค้ดส่วน Logic เดิมทั้งหมด (ห้ามเปลี่ยนแปลงตามที่แจ้ง)
+    // --- ระบบตรวจสอบคีย์ ---
+    function checkKey() {
+        const key = document.getElementById('accessKey').value;
+        const correctKey = "CONAN2026"; // <--- เปลี่ยนรหัสผ่านตรงนี้ได้เลยครับ
+        if(key === correctKey) {
+            document.getElementById('lockScreen').style.display = 'none';
+        } else {
+            const err = document.getElementById('errorMsg');
+            err.style.display = 'block';
+            setTimeout(() => { err.style.display = 'none'; }, 2000);
+        }
+    }
+
+    // --- ส่วน Logic เดิม (ห้ามเปลี่ยนแปลง) ---
     const movieNames = ["คดีปริศนาระเบิดระฟ้า", "คดีฆาตกรรมไพ่ปริศนา", "ปริศนาพ่อมดคนสุดท้ายแห่งศตวรรษ", "คดีฆาตกรรมนัยน์ตาปริศนา", "คดีปริศนาเส้นตายสู่สวรรค์", "ปริศนาบนถนนสายมรณะ", "คดีฆาตกรรมแห่งเมืองปริศนา", "มนตราแห่งรัตติกาลสีเงิน", "ยุทธการเหนือห้วงทะเลลึก", "บทเพลงมรณะแด่เหล่าเหล่านักสืบ", "ปริศนามหาขุมทรัพย์โจรสลัด", "บทเพลงแห่งความตาย", "ปริศนานักฆ่าทรยศ", "ปริศนามรณะเหนือน่านฟ้า", "15 นาทีเฉียดตายไขปริศนามรณะ", "ภาคระทึกขวัญยุทธจักรลูกหนัง", "ฝ่าวิกฤติเรือรบมรณะ", "ปริศนากระสุนมรณะ", "ปริศนาทานตะวันมรณะ", "ปริศนารัตติกาลทมิฬ", "ปริศนาเพลงกลอนซ่อนรัก", "ปฏิบัติการสายลับศูนย์", "ศึกชิงอัญมณีสีคราม", "กระสุนสีเพลิง", "เจ้าสาวฮาโลวีน", "มฤตยูใต้น้ำทมิฬ", "ปริศนาปราการห้าแฉก", "ปริศนาภาพติดตามรณะ"];
     const charData = { kid: ["ซีซั่น 1 ตอนที่ 78", "ซีซั่น 3 ตอนที่ 139", "ซีซั่น 5 ตอนที่ 235", "ซีซั่น 8 ตอนที่ 381", "ซีซั่น 10 ตอนที่ 512"], ai: ["ซีซั่น 3 ตอนที่ 136", "ซีซั่น 4 ตอนที่ 148", "ซีซั่น 5 ตอนที่ 190", "ซีซั่น 7 ตอนที่ 298"], amuro: ["ซีซั่น 15 ตอนที่ 719", "ซีซั่น 16 ตอนที่ 751", "ซีซั่น 18 ตอนที่ 832"], akai: ["ซีซั่น 6 ตอนที่ 249", "ซีซั่น 7 ตอนที่ 277", "ซีซั่น 12 ตอนที่ 538"] };
     const tvSeasons = { 20: 52, 21: 52, 22: 52, 23: 53, 24: 52, 25: 12 };
@@ -166,3 +198,4 @@
 </script>
 </body>
 </html>
+
