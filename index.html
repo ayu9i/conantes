@@ -107,9 +107,9 @@
     <div class="modal-content">
         <h3>📢 อัปเดตล่าสุด V3.5</h3>
         <div class="update-list">
+            • <b>Character Sync:</b> เพิ่มแก๊งนักสืบเยาวชน, ชินอิจิ, มาโคโตะ<br>
             • <b>UI Customizer:</b> ปรับแต่งสีและปุ่มได้เองแล้ว!<br>
             • <b>Responsive:</b> รองรับคอมและมือถือ<br>
-            • <b>Season 25:</b> เพิ่มตอนที่ 12 ลงในระบบสุ่ม<br>
             • <b>ระบบล็อค:</b> ป้องกันการสุ่มเจอตอนซ้ำ 100%
         </div>
         <button class="btn-main btn-gold" onclick="closeModal()">เข้าสู่หน้าหลัก!</button>
@@ -137,6 +137,9 @@
                     <option value="ai">ไฮบาระ ไอ 🧪</option>
                     <option value="amuro">อามุโร่ ☕</option>
                     <option value="akai">อากาอิ 🔫</option>
+                    <option value="detective_boys">แก๊งนักสืบเยาวชน 🔍</option>
+                    <option value="shinichi">คุโด้ ชินอิจิ ⚽</option>
+                    <option value="makoto">เคียวโกกุ มาโคโตะ 🥋</option>
                 </select>
             </div>
             <button id="btnChar" class="btn-main" style="background:none; border:1px solid var(--conan-gold); color:white; grid-column: span 2;" onclick="spinChar()">สุ่มตามตัวละคร</button>
@@ -184,22 +187,28 @@
     function updateRadius(val) { document.documentElement.style.setProperty('--btn-radius', val + 'px'); }
     function updateGlass(val) { document.documentElement.style.setProperty('--glass', `rgba(255,255,255,${val/100})`); }
 
-    /* --- Existing Logic --- */
+    /* --- Logic & Data --- */
     const movieNames = [
         "คดีปริศนาระเบิดระฟ้า", "คดีฆาตกรรมไพ่ปริศนา", "ปริศนาพ่อมดคนสุดท้ายแห่งศตวรรษ", "คดีฆาตกรรมนัยน์ตาปริศนา", 
         "คดีปริศนาเส้นตายสู่สวรรค์", "ปริศนาบนถนนสายมรณะ", "คดีฆาตกรรมแห่งเมืองปริศนา", "มนตราแห่งรัตติกาลสีเงิน", 
         "ยุทธการเหนือห้วงทะเลลึก", "บทเพลงมรณะแด่เหล่าเหล่านักสืบ", "ปริศนามหาขุมทรัพย์โจรสลัด", "บทเพลงแห่งความตาย", 
         "ปริศนานักฆ่าทรยศ", "ปริศนามรณะเหนือน่านฟ้า", "15 นาทีเฉียดตายไขปริศนามรณะ", "ภาคระทึกขวัญยุทธจักรลูกหนัง", 
-        "ฝ่าวิกฤติเรือรบมรณะ", "ปริศนากระสุนมรณะ", "ปริศนาทานตะวันมรณะ", "ปริศนารัตติกาลทมิฬ", 
+        "ฝ่าวิกฤติเรือรบมรณะ", "ปริศนากระสุนมรณะ", "ปริศนาทานตะวันมรณะ", "ปริศนาทานตะวันมรณะ", 
         "ปริศนาเพลงกลอนซ่อนรัก", "ปฏิบัติการสายลับศูนย์", "ศึกชิงอัญมณีสีคราม", "กระสุนสีเพลิง", 
         "เจ้าสาวฮาโลวีน", "มฤตยูใต้น้ำทมิฬ", "ปริศนาปราการห้าแฉก", "ปริศนาภาพติดตามรณะ"
     ];
+    
+    // ข้อมูลตอนตามตัวละคร (เพิ่มตามที่ขอ)
     const charData = { 
-        kid: ["ซีซั่น 1 ตอนที่ 78", "ซีซั่น 3 ตอนที่ 139", "ซีซั่น 5 ตอนที่ 235", "ซีซั่น 8 ตอนที่ 381", "ซีซั่น 10 ตอนที่ 512"],
-        ai: ["ซีซั่น 3 ตอนที่ 136", "ซีซั่น 4 ตอนที่ 148", "ซีซั่น 5 ตอนที่ 190", "ซีซั่น 7 ตอนที่ 298"],
+        kid: ["ซีซั่น 1 ตอนที่ 78", "ซีซั่น 3 ตอนที่ 139", "ซีซั่น 10 ตอนที่ 512", "ซีซั่น 16 ตอนที่ 776"],
+        ai: ["ซีซั่น 3 ตอนที่ 136", "ซีซั่น 4 ตอนที่ 148", "ซีซั่น 5 ตอนที่ 190", "ซีซั่น 18 ตอนที่ 899"],
         amuro: ["ซีซั่น 15 ตอนที่ 719", "ซีซั่น 16 ตอนที่ 751", "ซีซั่น 18 ตอนที่ 832"],
-        akai: ["ซีซั่น 6 ตอนที่ 249", "ซีซั่น 7 ตอนที่ 277", "ซีซั่น 12 ตอนที่ 538"]
+        akai: ["ซีซั่น 6 ตอนที่ 249", "ซีซั่น 7 ตอนที่ 277", "ซีซั่น 12 ตอนที่ 538", "ซีซั่น 17 ตอนที่ 834"],
+        detective_boys: ["ซีซั่น 1 ตอนที่ 4", "ซีซั่น 4 ตอนที่ 176", "ซีซั่น 10 ตอนที่ 499", "ซีซั่น 14 ตอนที่ 681"],
+        shinichi: ["ซีซั่น 1 ตอนที่ 1", "ซีซั่น 4 ตอนที่ 174", "ซีซั่น 11 ตอนที่ 572", "ซีซั่น 20 ตอนที่ 982 (ทัศนศึกษา)"],
+        makoto: ["ซีซั่น 4 ตอนที่ 163", "ซีซั่น 6 ตอนที่ 289", "ซีซั่น 10 ตอนที่ 498", "ซีซั่น 16 ตอนที่ 797"]
     };
+
     const tvSeasons = { 20: 52, 21: 52, 22: 52, 23: 53, 24: 52, 25: 12 };
     let history = JSON.parse(localStorage.getItem('conan_norepeat_v3')) || [];
 
@@ -217,12 +226,10 @@
         const body = document.getElementById('chatBody');
         body.innerHTML += `<div class="msg user">${cmd}</div>`;
         let reply = "กำลังประมวลผลค่ะ...";
-        if (cmd === 'วิธีใช้งาน') reply = "กดปุ่ม 'สุ่มทุกอย่าง' เพื่อเริ่มสืบคดีค่ะ! หรือเลือกสุ่มเฉพาะ Movie และตัวละครที่ชอบได้เลยนะคะ";
-        if (cmd === 'สุ่มซ้ำไหม') reply = "ไม่ซ้ำแน่นอนค่ะ! ระบบ Anti-Repeat จะกักตอนที่เคยสุ่มแล้วไว้ในประวัติ จนกว่าคุณจะล้างมันออกค่ะ";
-        if (cmd === 'ล้างประวัติ') reply = "กดที่ปุ่ม [ล้างทั้งหมด] ในแถบประวัติด้านล่าง เพื่อรีเซ็ตให้สุ่มเจอตอนเก่าๆ ได้อีกครั้งนะคะ";
-        if (cmd === 'ซีซั่น 25') reply = "อัปเดตเรียบร้อยแล้วค่ะ! ตอนนี้มีถึงตอนที่ 12 แล้ว (ข้อมูลล่าสุด V3.5)";
-        if (cmd === 'จำนวน Movie') reply = "มีให้สุ่มตั้งแต่ภาค 1 จนถึงภาค 28 ครบตามรายชื่อล่าสุดเลยค่ะ!";
-        if (cmd === 'ติดต่อแอดมิน') reply = "ฉันคือ AI ผู้ช่วยประจำ Conan Hub V3.5 ยินดีที่ได้บริการนะคะ!";
+        if (cmd === 'วิธีใช้งาน') reply = "เลือกตัวละครที่ชอบแล้วกด 'สุ่มตามตัวละคร' หรือกด 'สุ่มทุกอย่าง' เพื่อลุ้นทุกภาคค่ะ!";
+        if (cmd === 'สุ่มซ้ำไหม') reply = "ไม่ซ้ำแน่นอน! ระบบจะจำตอนที่เคยสุ่มแล้วไว้ให้ค่ะ";
+        if (cmd === 'ล้างประวัติ') reply = "กดที่ปุ่ม [ล้างทั้งหมด] ในแถบประวัติได้เลยนะคะ";
+        if (cmd === 'ซีซั่น 25') reply = "อัปเดตล่าสุดมีครบถึงตอนที่ 12 แล้วค่ะ!";
         setTimeout(() => { body.innerHTML += `<div class="msg bot">${reply}</div>`; body.scrollTop = body.scrollHeight; }, 300);
     }
 
@@ -267,6 +274,7 @@
             addH(result);
         });
     }
+
     function spinMovie() {
         startSpin(() => {
             let res, retry = 0;
@@ -280,6 +288,7 @@
             addH(res);
         });
     }
+
     function spinLupin() {
         startSpin(() => {
             let res = Math.random() > 0.5 ? "Lupin III vs Conan (2009)" : "Lupin III vs Conan (2013)";
@@ -288,6 +297,7 @@
             addH(res);
         });
     }
+
     function spinChar() {
         startSpin(() => {
             const c = document.getElementById('charSelect').value;
@@ -298,10 +308,17 @@
                 retry++;
                 if(retry > 20) break;
             } while (isDuplicate(res));
-            updateUI(res, `ตัวละคร: ${c.toUpperCase()}`);
-            addH(res + ` (${c})`);
+            
+            const charNames = {
+                kid: "จอมโจรคิด", ai: "ไฮบาระ", amuro: "อามุโร่", akai: "อากาอิ",
+                detective_boys: "แก๊งนักสืบเยาวชน", shinichi: "ชินอิจิ", makoto: "มาโคโตะ"
+            };
+            
+            updateUI(res, `ตัวละคร: ${charNames[c]}`);
+            addH(res + ` (${charNames[c]})`);
         });
     }
+
     function updateUI(m, b) { document.getElementById('epDisplay').innerHTML = m; document.getElementById('badge').innerHTML = b; }
     function addH(t) { history.unshift({ id: Date.now(), text: t, checked: false }); save(); }
     function toggleC(id) { const i = history.find(h => h.id === id); if(i) i.checked = !i.checked; save(); }
@@ -317,3 +334,4 @@
 </script>
 </body>
 </html>
+
