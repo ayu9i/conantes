@@ -157,22 +157,28 @@
 <div id="chatWindow">
     <div class="chat-header">ผู้ช่วยนักสืบ (Rich Menu)</div>
     <div class="chat-body" id="chatBody">
-        <div class="msg bot">สวัสดีค่ะ! เลือกเมนูที่ด้านล่างเพื่อสอบถามได้เลยนะคะ</div>
+        <div class="msg bot">สวัสดีค่ะ! มีอะไรให้ช่วยสืบไหมคะ? เลือกคำถามที่สนใจได้เลย!</div>
     </div>
     <div class="rich-menu-container">
         <div class="menu-tabs">
-            <div class="tab active" id="tabMain" onclick="switchTab('main')">เมนูหลัก</div>
-            <div class="tab" id="tabPromo" onclick="switchTab('promo')">ฟีเจอร์ใหม่</div>
+            <div class="tab active" id="tabMain" onclick="switchTab('main')">ระบบ</div>
+            <div class="tab" id="tabPromo" onclick="switchTab('promo')">ข้อมูลโคนัน</div>
         </div>
         <div id="gridMain" class="menu-grid">
-            <div class="menu-item" onclick="botReply('วิธีใช้งาน')">วิธีใช้งาน</div>
-            <div class="menu-item" onclick="botReply('สุ่มซ้ำไหม')">สุ่มซ้ำไหม</div>
+            <div class="menu-item" onclick="botReply('สุ่มยังไง')">สุ่มยังไง</div>
+            <div class="menu-item" onclick="botReply('กันซ้ำได้จริงไหม')">กันซ้ำได้จริงไหม</div>
             <div class="menu-item" onclick="botReply('ล้างประวัติ')">ล้างประวัติ</div>
+            <div class="menu-item" onclick="botReply('เปลี่ยนสี UI')">เปลี่ยนสี UI</div>
+            <div class="menu-item" onclick="botReply('ดูย้อนหลัง')">ดูย้อนหลัง</div>
+            <div class="menu-item" onclick="botReply('ติดต่อแอดมิน')">ผู้สร้าง</div>
         </div>
         <div id="gridPromo" class="menu-grid" style="display:none;">
-            <div class="menu-item" onclick="botReply('ซีซั่น 25')">ซีซั่น 25</div>
-            <div class="menu-item" onclick="botReply('จำนวน Movie')">จำนวน Movie</div>
-            <div class="menu-item" onclick="botReply('ติดต่อแอดมิน')">ผู้สร้าง</div>
+            <div class="menu-item" onclick="botReply('องค์กรชุดดำ')">องค์กรชุดดำ</div>
+            <div class="menu-item" onclick="botReply('มูฟวี่ล่าสุด')">มูฟวี่ล่าสุด</div>
+            <div class="menu-item" onclick="botReply('ตอนจบมีหรือยัง')">ตอนจบ?</div>
+            <div class="menu-item" onclick="botReply('ไฮบาระกับโคนัน')">ไฮบาระ</div>
+            <div class="menu-item" onclick="botReply('จอมโจรคิด')">จอมโจรคิด</div>
+            <div class="menu-item" onclick="botReply('ยอดนักสืบจิ๋ว')">ทำไมตัวไม่โต</div>
         </div>
     </div>
 </div>
@@ -199,7 +205,6 @@
         "เจ้าสาวฮาโลวีน", "มฤตยูใต้น้ำทมิฬ", "ปริศนาปราการห้าแฉก", "ปริศนาภาพติดตามรณะ"
     ];
     
-    // ข้อมูลตอนตามตัวละครแบบละเอียด (เพิ่มชื่อตอนให้แล้ว!)
     const charData = { 
         black_org: ["ซีซั่น 1 ตอนที่ 1 (จุดเริ่มต้น)", "ซีซั่น 4 ตอนที่ 135 (ไฮบาระปรากฏตัว)", "ซีซั่น 4 ตอนที่ 181-182 (ปะทะอีกครั้ง)", "ซีซั่น 5 ตอนที่ 190-192 (การกลับมาที่เสี่ยงตาย)", "ซีซั่น 6 ตอนที่ 249-250 (คำเชิญจากเบอร์มุธ)", "ซีซั่น 8 ตอนที่ 371-375 (ปะทะองค์กรชุดดำ)", "ซีซั่น 11 ตอนที่ 538-551 (ศึกชิงตัวประกันดำ)", "ซีซั่น 15 ตอนที่ 753-756 (รถด่วนทมิฬ)", "ซีซั่น 17 ตอนที่ 832-836 (ความจริงของสีแดง)"],
         kid: ["ซีซั่น 1 ตอนที่ 78 (โคนันปะทะจอมโจรคิด)", "ซีซั่น 3 ตอนที่ 139 (จอมโจรคิดกับพจนานุกรมภาพ)", "ซีซั่น 10 ตอนที่ 512 (จอมโจรคิดกับสี่ภาพเขียนชื่อดัง)", "ซีซั่น 16 ตอนที่ 776 (จอมโจรคิดปะทะเคียวโกกุ)"],
@@ -214,6 +219,7 @@
     const tvSeasons = { 20: 52, 21: 52, 22: 52, 23: 53, 24: 52, 25: 12 };
     let history = JSON.parse(localStorage.getItem('conan_norepeat_v3')) || [];
 
+    /* --- Chatbot Enhanced Logic --- */
     function toggleChat() {
         const win = document.getElementById('chatWindow');
         win.style.display = win.style.display === 'flex' ? 'none' : 'flex';
@@ -227,12 +233,30 @@
     function botReply(cmd) {
         const body = document.getElementById('chatBody');
         body.innerHTML += `<div class="msg user">${cmd}</div>`;
-        let reply = "กำลังประมวลผลค่ะ...";
-        if (cmd === 'วิธีใช้งาน') reply = "เลือกตัวละครที่ชอบแล้วกด 'สุ่มตามตัวละคร' หรือกด 'สุ่มทุกอย่าง' เพื่อลุ้นทุกภาคค่ะ!";
-        if (cmd === 'สุ่มซ้ำไหม') reply = "ไม่ซ้ำแน่นอน! ระบบจะจำตอนที่เคยสุ่มแล้วไว้ให้ค่ะ";
-        if (cmd === 'ล้างประวัติ') reply = "กดที่ปุ่ม [ล้างทั้งหมด] ในแถบประวัติได้เลยนะคะ";
-        if (cmd === 'ซีซั่น 25') reply = "อัปเดตล่าสุดมีครบถึงตอนที่ 12 แล้วค่ะ!";
-        setTimeout(() => { body.innerHTML += `<div class="msg bot">${reply}</div>`; body.scrollTop = body.scrollHeight; }, 300);
+        let reply = "ขออภัยค่ะ ข้อมูลส่วนนี้กำลังรวบรวมหลักฐานอยู่...";
+        
+        // Logic คำตอบแยกตามคำถาม
+        const responses = {
+            'สุ่มยังไง': 'กดปุ่มสีทอง "สุ่มทุกอย่าง" หรือเลือกหมวดที่ชอบ เช่น มูฟวี่ หรือตามตัวละคร แล้วระบบจะเลือกตอนให้ทันทีค่ะ!',
+            'กันซ้ำได้จริงไหม': 'จริงแท้ 100% ค่ะ! ระบบจะจำ ID ตอนที่เคยสุ่มแล้วไว้ในเครื่องคุณ ถ้าสุ่มเจอเลขเดิมระบบจะสุ่มใหม่ให้อัตโนมัติจนกว่าจะได้ตอนใหม่ค่ะ',
+            'ล้างประวัติ': 'มองหาแถบประวัติด้านล่าง แล้วกดที่คำว่า [ล้างทั้งหมด] ค่ะ ข้อมูลตอนที่เคยดูจะถูกรีเซ็ตให้สุ่มเจอได้อีกครั้ง',
+            'เปลี่ยนสี UI': 'กดปุ่มเฟือง ⚙️ มุมซ้ายบน เพื่อเปิดแผงตั้งค่า แล้วเลือก Theme Color ได้เลย มีสีแดง สีน้ำเงิน สีเขียว และสีทองค่ะ',
+            'ดูย้อนหลัง': 'ตอนนี้เราแนะนำให้ดูผ่านแอปถูกลิขสิทธิ์อย่าง iQIYI, Bilibili หรือ TrueVisions เพื่อสนับสนุนเจ้าของผลงานนะคะ!',
+            'ติดต่อแอดมิน': 'สร้างโดยแฟนคลับโคนันเพื่อเพื่อนๆ ทุกคนค่ะ! ขอบคุณที่ใช้งานนะคะ Ayu!',
+            'องค์กรชุดดำ': 'คือกลุ่มชายชุดดำที่ให้ยา APTX-4869 กับชินอิจิ มีสมาชิกรหัสลับเป็นชื่อเหล้า เช่น ยิน, วอดก้า, เบอร์มุธ!',
+            'มูฟวี่ล่าสุด': 'มูฟวี่ล่าสุดคือภาคที่ 28 "The Million-dollar Pentagram" หรือปริศนาปราการห้าแฉกค่ะ!',
+            'ตอนจบมีหรือยัง': 'ในฉบับมังงะและอนิเมะยังไม่มีตอนจบค่ะ แต่อาจารย์โกโชบอกว่าวางพล็อตตอนจบไว้แล้ว รอลุ้นไปด้วยกันนะ!',
+            'ไฮบาระกับโคนัน': 'คู่นี้เคมีเข้ากันสุดๆ! ไฮบาระคืออดีตเชอร์รี่ สมาชิกองค์กรที่หนีมา และเป็นคนสร้างยา APTX-4869 ค่ะ',
+            'จอมโจรคิด': 'คู่ปรับตลอดกาลของโคนัน มีชื่อจริงว่า "คุโรบะ ไคโตะ" เป้าหมายคือการตามหาอัญมณีแพนดอร่าค่ะ',
+            'ยอดนักสืบจิ๋ว': 'เพราะชินอิจิถูกบังคับให้กินยา APTX-4869 ทำให้เซลล์ร่างกายหดตัวจนกลายเป็นเด็กประถมค่ะ!'
+        };
+
+        if (responses[cmd]) reply = responses[cmd];
+        
+        setTimeout(() => { 
+            body.innerHTML += `<div class="msg bot">${reply}</div>`; 
+            body.scrollTop = body.scrollHeight; 
+        }, 400);
     }
 
     function closeModal() { document.getElementById('updateModal').style.display = 'none'; }
@@ -316,7 +340,6 @@
                 detective_boys: "แก๊งนักสืบเยาวชน", shinichi: "ชินอิจิ", makoto: "มาโคโตะ"
             };
             
-            // แยกชื่อตอนมาแสดงเป็น span ตัวเล็กถ้ามีวงเล็บ
             let displayRes = res;
             if(res.includes('(')) {
                 const parts = res.split(' (');
@@ -343,3 +366,4 @@
 </script>
 </body>
 </html>
+
