@@ -14,200 +14,323 @@
         }
         body { margin: 0; font-family: 'Kanit', sans-serif; background: #000; color: white; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding-bottom: 50px; overflow-x: hidden; }
         
-        /* --- Next Case Banner --- */
-        .next-case-banner { width: 100%; background: linear-gradient(90deg, #000, var(--conan-gold), #000); padding: 10px 0; text-align: center; font-size: 0.9rem; font-weight: 600; border-bottom: 1px solid var(--conan-gold); }
-
         /* --- UI Customizer Panel --- */
         #uiPanel { position: fixed; top: 0; left: -300px; width: 260px; height: 100%; background: #111; border-right: 2px solid var(--conan-gold); z-index: 1002; transition: 0.3s; padding: 20px; box-sizing: border-box; }
         #uiPanel.active { left: 0; }
-        .config-btn { position: fixed; top: 60px; left: 20px; background: var(--conan-gold); width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 1001; font-size: 20px; box-shadow: 0 0 15px var(--conan-gold); }
+        .config-btn { position: fixed; top: 20px; left: 20px; background: var(--conan-gold); width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 1001; font-size: 20px; box-shadow: 0 0 15px var(--conan-gold); }
         .panel-title { border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 15px; font-weight: 600; color: var(--conan-gold); }
         .setting-item { margin-bottom: 15px; text-align: left; }
         .setting-item label { display: block; font-size: 0.8rem; margin-bottom: 5px; opacity: 0.8; }
 
-        /* --- Main UI --- */
+        /* --- Existing Styles --- */
         #updateModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
         .modal-content { background: #111; border: 2px solid var(--conan-gold); border-radius: 20px; padding: 25px; max-width: 400px; width: 85%; text-align: center; }
+        .update-list { text-align: left; font-size: 0.8rem; background: rgba(255,255,255,0.05); padding: 12px; border-radius: 10px; margin: 15px 0; line-height: 1.5; }
         
-        .container { width: 100%; max-width: 500px; padding: 20px 15px; text-align: center; transition: max-width 0.3s; }
+        .container { width: 100%; max-width: 500px; padding: 20px 15px; text-align: center; transition: max-width 0.3s; margin-top: 50px; }
+        .btn-group-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        
+        @media (min-width: 768px) {
+            .container { max-width: 800px; }
+            .premium-card { padding: 40px; }
+            .btn-group-grid { grid-template-columns: repeat(4, 1fr); }
+            .ep-display { font-size: 2.5rem; }
+        }
+
         .premium-card { background: var(--glass); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 24px; padding: 20px; backdrop-filter: blur(15px); }
-        .btn-group-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
-        
-        .ep-display { font-size: 1.8rem; font-weight: 600; color: #fff; margin: 20px 0; min-height: 100px; display: flex; flex-direction: column; justify-content: center; }
-        .ep-display span { color: var(--conan-gold); font-size: 1.1rem; display: block; margin-top: 5px; }
-        
-        .btn-main { width: 100%; padding: 12px; font-size: 1rem; font-weight: 600; border-radius: var(--btn-radius); border: none; cursor: pointer; transition: 0.2s; font-family: 'Kanit'; }
+        .result-container { margin: 10px 0; min-height: 150px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .info-badge { display: inline-block; padding: 4px 12px; background: rgba(212, 175, 55, 0.1); border: 1px solid var(--conan-gold); border-radius: 50px; font-size: 0.8rem; color: var(--conan-gold); margin-bottom: 5px; opacity: 0; transition: 0.3s; }
+        .info-badge.show { opacity: 1; }
+        .ep-display { font-size: 1.8rem; font-weight: 600; color: #fff; opacity: 0; transform: translateY(10px); transition: 0.4s; }
+        .ep-display span { color: var(--conan-gold); font-size: 1.1rem; display: block; margin-top: 5px; font-weight: 300; }
+        .ep-display.show { opacity: 1; transform: translateY(0); }
+        .btn-main { width: 100%; padding: 12px; font-size: 1rem; font-weight: 600; border-radius: var(--btn-radius); border: none; cursor: pointer; transition: 0.2s; margin-bottom: 8px; font-family: 'Kanit'; }
         .btn-gold { background: linear-gradient(135deg, var(--conan-gold) 0%, #f1d57a 100%); color: #000; }
         .btn-dark { background: rgba(255,255,255,0.1); color: #fff; border: 1px solid #444; }
         
-        /* --- Chatbot / Rich Menu --- */
+        .history-card { margin-top: 20px; text-align: left; background: rgba(0,0,0,0.5); border-radius: 15px; padding: 15px; border: 1px solid rgba(255,255,255,0.1); }
+        .history-title { font-size: 0.85rem; color: var(--conan-gold); margin-bottom: 10px; display: flex; justify-content: space-between; }
+        .history-list { max-height: 250px; overflow-y: auto; font-size: 0.8rem; }
+        .history-item { padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: space-between; }
+        .history-item.checked span:first-child { text-decoration: line-through; opacity: 0.4; }
+        .btn-del { color: var(--danger); cursor: pointer; font-size: 1.1rem; margin-left: 10px; }
+        .door-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 999; display: flex; }
+        .door { position: absolute; width: 50%; height: 100%; background: #050505; transition: 0.5s ease-in-out; border: 1px solid var(--conan-gold); }
+        .door-left { left: -50%; } .door-right { right: -50%; }
+        .door-container.active .door-left { transform: translateX(100%); }
+        .door-container.active .door-right { transform: translateX(-100%); }
+        select { background: #111; color: #fff; border: 1px solid #444; padding: 10px; border-radius: 8px; width: 100%; font-family: 'Kanit'; margin-bottom: 8px; }
+
+        /* --- Chatbot Styles --- */
         #chatBtn { position: fixed; bottom: 20px; right: 20px; background: var(--conan-gold); width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.5); z-index: 1001; }
-        #chatWindow { position: fixed; bottom: 90px; right: 20px; width: 320px; height: 480px; background: #111; border: 1px solid var(--conan-gold); border-radius: 15px; display: none; flex-direction: column; overflow: hidden; z-index: 1001; box-shadow: 0 5px 25px rgba(0,0,0,0.8); }
+        #chatWindow { position: fixed; bottom: 90px; right: 20px; width: 320px; height: 450px; background: #111; border: 1px solid var(--conan-gold); border-radius: 15px; display: none; flex-direction: column; overflow: hidden; z-index: 1001; box-shadow: 0 5px 25px rgba(0,0,0,0.8); }
         .chat-header { background: var(--conan-gold); color: #000; padding: 12px; font-weight: 600; text-align: center; }
         .chat-body { flex: 1; padding: 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; font-size: 0.85rem; background: #0a0a0a; }
-        .msg { padding: 8px 12px; border-radius: 12px; max-width: 80%; }
-        .bot { background: #222; align-self: flex-start; }
+        .msg { padding: 8px 12px; border-radius: 12px; max-width: 80%; line-height: 1.4; }
+        .bot { background: #222; align-self: flex-start; border: 1px solid #333; }
         .user { background: var(--conan-gold); color: #000; align-self: flex-end; }
-        
-        .rich-menu { background: #1a1a1a; border-top: 2px solid var(--conan-gold); }
-        .menu-tabs { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid #333; }
-        .tab { padding: 10px; text-align: center; cursor: pointer; font-size: 0.8rem; }
-        .tab.active { background: var(--conan-gold); color: black; font-weight: 600; }
-        .menu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; padding: 10px; }
-        .menu-item { background: #333; padding: 10px 5px; border-radius: 5px; text-align: center; font-size: 0.7rem; cursor: pointer; }
-        
-        /* --- History --- */
-        .history-card { margin-top: 20px; text-align: left; background: rgba(0,0,0,0.5); border-radius: 15px; padding: 15px; border: 1px solid rgba(255,255,255,0.1); }
-        .history-list { max-height: 150px; overflow-y: auto; font-size: 0.8rem; }
-        .history-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #222; }
-
-        select { background: #111; color: #fff; border: 1px solid #444; padding: 10px; border-radius: 8px; width: 100%; font-family: 'Kanit'; }
+        .rich-menu-container { background: #111; border-top: 2px solid var(--conan-gold); }
+        .menu-tabs { display: grid; grid-template-columns: 1fr 1fr; }
+        .tab { padding: 10px; text-align: center; font-size: 0.9rem; font-weight: bold; cursor: pointer; color: white; background: #222; border-bottom: 2px solid transparent; }
+        .tab.active { background: var(--conan-gold); color: black; }
+        .menu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; padding: 10px; background: #1a1a1a; }
+        .menu-item { background: #333; padding: 8px 2px; border-radius: 5px; text-align: center; font-size: 0.7rem; cursor: pointer; transition: 0.2s; border: 1px solid #444; }
+        .menu-item:hover { background: var(--conan-gold); color: black; }
     </style>
 </head>
 <body>
 
-<div class="next-case-banner">🚨 NEXT CASE: ซีซั่น 25 ตอนที่ 12 เสาร์นี้ 21:00 น.!</div>
-
 <div class="config-btn" onclick="toggleUIPanel()">⚙️</div>
 <div id="uiPanel">
-    <div class="panel-title">ตั้งค่าหน้าจอ</div>
+    <div class="panel-title">ปรับแต่ง UI</div>
     <div class="setting-item">
-        <label>โทนสีหลัก</label>
+        <label>Theme Color</label>
         <select onchange="updateTheme(this.value)">
-            <option value="#d4af37">Gold (คลาสสิก)</option>
-            <option value="#37a6d4">Blue (นักสืบ)</option>
-            <option value="#d43737">Red (คนร้าย)</option>
+            <option value="#d4af37">Gold (Classic)</option>
+            <option value="#37a6d4">Blue (Detective)</option>
+            <option value="#d43737">Red (Criminal)</option>
+            <option value="#37d45d">Green (Acid)</option>
         </select>
     </div>
     <div class="setting-item">
-        <label>ความมนของปุ่ม</label>
+        <label>Button Roundness</label>
         <input type="range" min="0" max="30" value="12" oninput="updateRadius(this.value)">
     </div>
     <div class="setting-item">
-        <label>ความโปร่งใส (Glass)</label>
+        <label>Glass Transparency</label>
         <input type="range" min="0" max="50" value="8" oninput="updateGlass(this.value)">
     </div>
-    <button class="btn-main btn-gold" onclick="toggleUIPanel()" style="margin-top:20px;">บันทึกและปิด</button>
+    <button class="btn-main btn-gold" onclick="toggleUIPanel()" style="margin-top:20px;">ปิดตั้งค่า</button>
 </div>
 
 <div id="updateModal">
     <div class="modal-content">
-        <h3>📢 CONAN HUB V3.5</h3>
-        <p style="font-size: 0.8rem; opacity: 0.8;">ปรับปรุงระบบสุ่มตัวละครและเมนูช่วยเหลือใหม่!</p>
-        <button class="btn-main btn-gold" onclick="closeModal()">เริ่มสืบคดี!</button>
+        <h3>📢 อัปเดตล่าสุด V3.5</h3>
+        <div class="update-list">
+            • <b>Character Sync:</b> เพิ่มแก๊งนักสืบเยาวชน, ชินอิจิ, มาโคโตะ<br>
+            • <b>UI Customizer:</b> ปรับแต่งสีและปุ่มได้เองแล้ว!<br>
+            • <b>Responsive:</b> รองรับคอมและมือถือ<br>
+            • <b>ระบบล็อค:</b> ป้องกันการสุ่มเจอตอนซ้ำ 100%
+        </div>
+        <button class="btn-main btn-gold" onclick="closeModal()">เข้าสู่หน้าหลัก!</button>
     </div>
 </div>
 
+<div class="door-container" id="doorSystem"><div class="door door-left"></div><div class="door door-right"></div></div>
+
 <div class="container">
-    <h2 style="letter-spacing: 3px; color: var(--conan-gold);">CONAN HUB</h2>
-    <div class="premium-card">
-        <div id="epDisplay" class="ep-display">กดปุ่มเพื่อเริ่มสุ่มตอน!</div>
-        
-        <button class="btn-main btn-gold" onclick="spinEverything()">สุ่มทุกอย่าง (ห้ามซ้ำ)</button>
+    <h2 id="mainTitle" style="letter-spacing: 2px;">CONAN HUB</h2>
+    <div class="premium-card" id="mainCard">
+        <div id="badge" class="info-badge">พร้อมสืบคดี...</div>
+        <div class="result-container"><h2 id="epDisplay" class="ep-display">สุ่มตอนที่ไม่เคยดูได้เลย!</h2></div>
         
         <div class="btn-group-grid">
-            <button class="btn-main btn-dark" onclick="spinMovie()">มูฟวี่ 1-28</button>
-            <button class="btn-main btn-dark" onclick="spinLupin()">ปะทะ ลูแปง</button>
+            <button id="btnEverything" class="btn-main btn-gold" style="grid-column: span 2;" onclick="spinEverything()">สุ่มทุกอย่าง</button>
+            <button id="btnMovie" class="btn-main btn-dark" onclick="spinMovie()">มูฟวี่ 1-28</button>
+            <button id="btnLupin" class="btn-main btn-dark" onclick="spinLupin()">ปะทะ ลูแปง</button>
         </div>
 
-        <div style="margin-top:15px;">
-            <select id="charSelect">
-                <option value="kid">จอมโจรคิด 🎩</option>
-                <option value="ai">ไฮบาระ ไอ 🧪</option>
-                <option value="shinichi">ชินอิจิ ⚽</option>
-                <option value="makoto">มาโคโตะ 🥋</option>
-                <option value="detective_boys">แก๊งนักสืบเยาวชน 🔍</option>
-            </select>
-            <button class="btn-main" style="border:1px solid var(--conan-gold); color:white; background:none; margin-top:8px;" onclick="spinChar()">สุ่มตามตัวละคร</button>
+        <div class="btn-group-grid">
+            <div style="grid-column: span 2;">
+                <select id="charSelect">
+                    <option value="kid">จอมโจรคิด 🎩</option>
+                    <option value="ai">ไฮบาระ ไอ 🧪</option>
+                    <option value="amuro">อามุโร่ ☕</option>
+                    <option value="akai">อากาอิ 🔫</option>
+                    <option value="detective_boys">แก๊งนักสืบเยาวชน 🔍</option>
+                    <option value="shinichi">คุโด้ ชินอิจิ ⚽</option>
+                    <option value="makoto">เคียวโกกุ มาโคโตะ 🥋</option>
+                </select>
+            </div>
+            <button id="btnChar" class="btn-main" style="background:none; border:1px solid var(--conan-gold); color:white; grid-column: span 2;" onclick="spinChar()">สุ่มตามตัวละคร</button>
         </div>
 
         <div class="history-card">
-            <div style="font-size:0.8rem; color:var(--conan-gold); margin-bottom:10px;">ประวัติการสุ่มล่าสุด</div>
-            <div id="historyList" class="history-list">ยังไม่มีประวัติ</div>
+            <div class="history-title">ประวัติ (ห้ามสุ่มซ้ำ) <span onclick="clearAllHistory()" style="cursor:pointer; opacity:0.6;">[ล้างทั้งหมด]</span></div>
+            <div id="historyList" class="history-list"><div style="text-align:center; padding:10px; color:#555;">ยังไม่มีประวัติ</div></div>
         </div>
     </div>
 </div>
 
-<div id="chatBtn" onclick="toggleChat()">💬</div>
+<div id="chatBtn" onclick="toggleChat()">🔍</div>
 <div id="chatWindow">
-    <div class="chat-header">ศูนย์ช่วยเหลือนักสืบ</div>
+    <div class="chat-header">ผู้ช่วยนักสืบ (Rich Menu)</div>
     <div class="chat-body" id="chatBody">
-        <div class="msg bot">สวัสดีครับ! สงสัยตรงไหนเลือกเมนูด้านล่างได้เลยนะ</div>
+        <div class="msg bot">สวัสดีค่ะ! เลือกเมนูที่ด้านล่างเพื่อสอบถามได้เลยนะคะ</div>
     </div>
-    <div class="rich-menu">
+    <div class="rich-menu-container">
         <div class="menu-tabs">
-            <div class="tab active" id="tab1" onclick="switchTab(1)">เมนูหลัก</div>
-            <div class="tab" id="tab2" onclick="switchTab(2)">ข้อมูลเพิ่มเติม</div>
+            <div class="tab active" id="tabMain" onclick="switchTab('main')">เมนูหลัก</div>
+            <div class="tab" id="tabPromo" onclick="switchTab('promo')">ฟีเจอร์ใหม่</div>
         </div>
-        <div id="grid1" class="menu-grid">
-            <div class="menu-item" onclick="botReply('วิธีสุ่ม')">วิธีสุ่ม</div>
-            <div class="menu-item" onclick="botReply('ระบบกันซ้ำ')">กันซ้ำยังไง?</div>
+        <div id="gridMain" class="menu-grid">
+            <div class="menu-item" onclick="botReply('วิธีใช้งาน')">วิธีใช้งาน</div>
+            <div class="menu-item" onclick="botReply('สุ่มซ้ำไหม')">สุ่มซ้ำไหม</div>
             <div class="menu-item" onclick="botReply('ล้างประวัติ')">ล้างประวัติ</div>
         </div>
-        <div id="grid2" class="menu-grid" style="display:none;">
-            <div class="menu-item" onclick="botReply('ซีซั่นล่าสุด')">ซีซั่นล่าสุด</div>
-            <div class="menu-item" onclick="botReply('Movie 28')">Movie 28</div>
-            <div class="menu-item" onclick="botReply('ผู้พัฒนา')">ผู้พัฒนา</div>
+        <div id="gridPromo" class="menu-grid" style="display:none;">
+            <div class="menu-item" onclick="botReply('ซีซั่น 25')">ซีซั่น 25</div>
+            <div class="menu-item" onclick="botReply('จำนวน Movie')">จำนวน Movie</div>
+            <div class="menu-item" onclick="botReply('ติดต่อแอดมิน')">ผู้สร้าง</div>
         </div>
     </div>
 </div>
 
 <script>
-    let history = JSON.parse(localStorage.getItem('conan_history_v3')) || [];
-
+    /* --- UI Customizer Logic --- */
     function toggleUIPanel() { document.getElementById('uiPanel').classList.toggle('active'); }
-    function updateTheme(c) { document.documentElement.style.setProperty('--conan-gold', c); }
-    function updateRadius(v) { document.documentElement.style.setProperty('--btn-radius', v + 'px'); }
-    function updateGlass(v) { document.documentElement.style.setProperty('--glass', `rgba(255,255,255,${v/100})`); }
-    function closeModal() { document.getElementById('updateModal').style.display = 'none'; }
+    function updateTheme(color) {
+        document.documentElement.style.setProperty('--conan-gold', color);
+        document.getElementById('uiPanel').style.borderColor = color;
+        document.querySelector('.config-btn').style.boxShadow = `0 0 15px ${color}`;
+    }
+    function updateRadius(val) { document.documentElement.style.setProperty('--btn-radius', val + 'px'); }
+    function updateGlass(val) { document.documentElement.style.setProperty('--glass', `rgba(255,255,255,${val/100})`); }
+
+    /* --- Logic & Data --- */
+    const movieNames = [
+        "คดีปริศนาระเบิดระฟ้า", "คดีฆาตกรรมไพ่ปริศนา", "ปริศนาพ่อมดคนสุดท้ายแห่งศตวรรษ", "คดีฆาตกรรมนัยน์ตาปริศนา", 
+        "คดีปริศนาเส้นตายสู่สวรรค์", "ปริศนาบนถนนสายมรณะ", "คดีฆาตกรรมแห่งเมืองปริศนา", "มนตราแห่งรัตติกาลสีเงิน", 
+        "ยุทธการเหนือห้วงทะเลลึก", "บทเพลงมรณะแด่เหล่าเหล่านักสืบ", "ปริศนามหาขุมทรัพย์โจรสลัด", "บทเพลงแห่งความตาย", 
+        "ปริศนานักฆ่าทรยศ", "ปริศนามรณะเหนือน่านฟ้า", "15 นาทีเฉียดตายไขปริศนามรณะ", "ภาคระทึกขวัญยุทธจักรลูกหนัง", 
+        "ฝ่าวิกฤติเรือรบมรณะ", "ปริศนากระสุนมรณะ", "ปริศนาทานตะวันมรณะ", "ปริศนาทานตะวันมรณะ", 
+        "ปริศนาเพลงกลอนซ่อนรัก", "ปฏิบัติการสายลับศูนย์", "ศึกชิงอัญมณีสีคราม", "กระสุนสีเพลิง", 
+        "เจ้าสาวฮาโลวีน", "มฤตยูใต้น้ำทมิฬ", "ปริศนาปราการห้าแฉก", "ปริศนาภาพติดตามรณะ"
+    ];
     
-    function toggleChat() { 
-        const w = document.getElementById('chatWindow');
-        w.style.display = w.style.display === 'flex' ? 'none' : 'flex';
+    // ข้อมูลตอนตามตัวละคร (เพิ่มตามที่ขอ)
+    const charData = { 
+        kid: ["ซีซั่น 1 ตอนที่ 78", "ซีซั่น 3 ตอนที่ 139", "ซีซั่น 10 ตอนที่ 512", "ซีซั่น 16 ตอนที่ 776"],
+        ai: ["ซีซั่น 3 ตอนที่ 136", "ซีซั่น 4 ตอนที่ 148", "ซีซั่น 5 ตอนที่ 190", "ซีซั่น 18 ตอนที่ 899"],
+        amuro: ["ซีซั่น 15 ตอนที่ 719", "ซีซั่น 16 ตอนที่ 751", "ซีซั่น 18 ตอนที่ 832"],
+        akai: ["ซีซั่น 6 ตอนที่ 249", "ซีซั่น 7 ตอนที่ 277", "ซีซั่น 12 ตอนที่ 538", "ซีซั่น 17 ตอนที่ 834"],
+        detective_boys: ["ซีซั่น 1 ตอนที่ 4", "ซีซั่น 4 ตอนที่ 176", "ซีซั่น 10 ตอนที่ 499", "ซีซั่น 14 ตอนที่ 681"],
+        shinichi: ["ซีซั่น 1 ตอนที่ 1", "ซีซั่น 4 ตอนที่ 174", "ซีซั่น 11 ตอนที่ 572", "ซีซั่น 20 ตอนที่ 982 (ทัศนศึกษา)"],
+        makoto: ["ซีซั่น 4 ตอนที่ 163", "ซีซั่น 6 ตอนที่ 289", "ซีซั่น 10 ตอนที่ 498", "ซีซั่น 16 ตอนที่ 797"]
+    };
+
+    const tvSeasons = { 20: 52, 21: 52, 22: 52, 23: 53, 24: 52, 25: 12 };
+    let history = JSON.parse(localStorage.getItem('conan_norepeat_v3')) || [];
+
+    function toggleChat() {
+        const win = document.getElementById('chatWindow');
+        win.style.display = win.style.display === 'flex' ? 'none' : 'flex';
+    }
+    function switchTab(type) {
+        document.getElementById('tabMain').classList.toggle('active', type === 'main');
+        document.getElementById('tabPromo').classList.toggle('active', type === 'promo');
+        document.getElementById('gridMain').style.display = type === 'main' ? 'grid' : 'none';
+        document.getElementById('gridPromo').style.display = type === 'promo' ? 'grid' : 'none';
+    }
+    function botReply(cmd) {
+        const body = document.getElementById('chatBody');
+        body.innerHTML += `<div class="msg user">${cmd}</div>`;
+        let reply = "กำลังประมวลผลค่ะ...";
+        if (cmd === 'วิธีใช้งาน') reply = "เลือกตัวละครที่ชอบแล้วกด 'สุ่มตามตัวละคร' หรือกด 'สุ่มทุกอย่าง' เพื่อลุ้นทุกภาคค่ะ!";
+        if (cmd === 'สุ่มซ้ำไหม') reply = "ไม่ซ้ำแน่นอน! ระบบจะจำตอนที่เคยสุ่มแล้วไว้ให้ค่ะ";
+        if (cmd === 'ล้างประวัติ') reply = "กดที่ปุ่ม [ล้างทั้งหมด] ในแถบประวัติได้เลยนะคะ";
+        if (cmd === 'ซีซั่น 25') reply = "อัปเดตล่าสุดมีครบถึงตอนที่ 12 แล้วค่ะ!";
+        setTimeout(() => { body.innerHTML += `<div class="msg bot">${reply}</div>`; body.scrollTop = body.scrollHeight; }, 300);
     }
 
-    function switchTab(n) {
-        document.getElementById('tab1').classList.toggle('active', n === 1);
-        document.getElementById('tab2').classList.toggle('active', n === 2);
-        document.getElementById('grid1').style.display = n === 1 ? 'grid' : 'none';
-        document.getElementById('grid2').style.display = n === 2 ? 'grid' : 'none';
+    function closeModal() { document.getElementById('updateModal').style.display = 'none'; }
+    function startSpin(fn) {
+        document.getElementById('doorSystem').classList.add('active');
+        setTimeout(() => { document.getElementById('epDisplay').classList.remove('show'); fn(); }, 500);
+        setTimeout(() => document.getElementById('doorSystem').classList.remove('active'), 1200);
+        setTimeout(() => { document.getElementById('epDisplay').classList.add('show'); document.getElementById('badge').classList.add('show'); }, 1500);
     }
-
-    function botReply(q) {
-        const b = document.getElementById('chatBody');
-        b.innerHTML += `<div class="msg user">${q}</div>`;
-        let a = "รอสักครู่นะครับ...";
-        if(q === 'วิธีสุ่ม') a = "เลือกโหมดที่ต้องการสุ่มจากหน้าหลักได้เลยครับ ระบบจะเลือกตอนให้แบบไม่ซ้ำ!";
-        if(q === 'ระบบกันซ้ำ') a = "เราใช้ LocalStorage จำ ID ตอนที่สุ่มไปแล้ว ทำให้จะไม่เจอตอนเดิมจนกว่าจะล้างประวัติครับ";
-        if(q === 'ล้างประวัติ') a = "คุณสามารถกดล้างประวัติได้ที่แถบประวัติด้านล่างครับ (ฟีเจอร์กำลังอัปเดต)";
-        if(q === 'ซีซั่นล่าสุด') a = "ตอนนี้มีถึงซีซั่น 25 ตอนที่ 11 แล้วครับ!";
-        setTimeout(() => { b.innerHTML += `<div class="msg bot">${a}</div>`; b.scrollTop = b.scrollHeight; }, 400);
-    }
-
+    function isDuplicate(text) { return history.some(h => h.text.includes(text)); }
+    
     function spinEverything() {
-        const res = "ซีซั่น " + (Math.floor(Math.random() * 25) + 1) + " ตอนที่ " + (Math.floor(Math.random() * 50) + 1);
-        renderResult(res);
+        startSpin(() => {
+            let result = "", badge = "", retry = 0;
+            do {
+                const p = Math.random();
+                if (p < 0.6) {
+                    if (Math.random() < 0.5) {
+                        const ep = Math.floor(Math.random() * 981) + 1;
+                        const s = Math.ceil(ep / 52);
+                        result = `ซีซั่น ${s > 19 ? 19 : s} ตอนที่ ${ep}`;
+                        badge = "iQIYI";
+                    } else {
+                        const s = Object.keys(tvSeasons)[Math.floor(Math.random() * 6)];
+                        const ep = Math.floor(Math.random() * tvSeasons[s]) + 1;
+                        result = `ซีซั่น ${s} ตอนที่ ${ep}`;
+                        badge = "TrueVisions";
+                    }
+                } else if (p < 0.9) {
+                    const i = Math.floor(Math.random() * movieNames.length);
+                    result = `Movie ${i+1}: ${movieNames[i]}`;
+                    badge = "เดอะมูฟวี่";
+                } else {
+                    result = Math.random() > 0.5 ? "Lupin III vs Conan (2009)" : "Lupin III vs Conan (2013)";
+                    badge = "ตอนพิเศษ";
+                }
+                retry++;
+                if(retry > 50) break;
+            } while (isDuplicate(result));
+            updateUI(result.includes(':') ? `Movie ${result.split(': ')[0].split(' ')[1]} <span>${result.split(': ')[1]}</span>` : result, badge);
+            addH(result);
+        });
     }
 
     function spinMovie() {
-        const movies = ["คดีปริศนาระเบิดระฟ้า", "คดีฆาตกรรมไพ่ปริศนา", "มนตราแห่งรัตติกาลสีเงิน", "มฤตยูใต้น้ำทมิฬ"];
-        const res = "Movie: <span>" + movies[Math.floor(Math.random() * movies.length)] + "</span>";
-        renderResult(res);
+        startSpin(() => {
+            let res, retry = 0;
+            do {
+                const i = Math.floor(Math.random() * movieNames.length);
+                res = `Movie ${i+1}: ${movieNames[i]}`;
+                retry++;
+                if(retry > 50) break;
+            } while (isDuplicate(res));
+            updateUI(`Movie ${res.split(': ')[0].split(' ')[1]} <span>${res.split(': ')[1]}</span>`, "เดอะมูฟวี่");
+            addH(res);
+        });
     }
 
-    function renderResult(txt) {
-        document.getElementById('epDisplay').innerHTML = txt;
-        history.unshift(txt.replace('<span>','').replace('</span>',''));
-        if(history.length > 10) history.pop();
-        localStorage.setItem('conan_history_v3', JSON.stringify(history));
-        updateHistory();
+    function spinLupin() {
+        startSpin(() => {
+            let res = Math.random() > 0.5 ? "Lupin III vs Conan (2009)" : "Lupin III vs Conan (2013)";
+            if (isDuplicate(res)) res = res.includes("2009") ? "Lupin III vs Conan (2013)" : "Lupin III vs Conan (2009)";
+            updateUI(res, "ตอนพิเศษ");
+            addH(res);
+        });
     }
 
-    function updateHistory() {
+    function spinChar() {
+        startSpin(() => {
+            const c = document.getElementById('charSelect').value;
+            const pool = charData[c];
+            let res, retry = 0;
+            do {
+                res = pool[Math.floor(Math.random() * pool.length)];
+                retry++;
+                if(retry > 20) break;
+            } while (isDuplicate(res));
+            
+            const charNames = {
+                kid: "จอมโจรคิด", ai: "ไฮบาระ", amuro: "อามุโร่", akai: "อากาอิ",
+                detective_boys: "แก๊งนักสืบเยาวชน", shinichi: "ชินอิจิ", makoto: "มาโคโตะ"
+            };
+            
+            updateUI(res, `ตัวละคร: ${charNames[c]}`);
+            addH(res + ` (${charNames[c]})`);
+        });
+    }
+
+    function updateUI(m, b) { document.getElementById('epDisplay').innerHTML = m; document.getElementById('badge').innerHTML = b; }
+    function addH(t) { history.unshift({ id: Date.now(), text: t, checked: false }); save(); }
+    function toggleC(id) { const i = history.find(h => h.id === id); if(i) i.checked = !i.checked; save(); }
+    function delI(id, e) { e.stopPropagation(); history = history.filter(h => h.id !== id); save(); }
+    function clearAllHistory() { if(confirm("ล้างทั้งหมดจะสุ่มตอนเก่าซ้ำได้อีกครั้ง?")) { history = []; save(); } }
+    function save() {
+        localStorage.setItem('conan_norepeat_v3', JSON.stringify(history));
         const l = document.getElementById('historyList');
-        l.innerHTML = history.map(h => `<div class="history-item"><span>${h}</span><span>✅</span></div>`).join('');
+        if(!history.length) { l.innerHTML = '<div style="text-align:center; padding:10px; color:#555;">ไม่มีประวัติ</div>'; return; }
+        l.innerHTML = history.map(h => `<div class="history-item ${h.checked ? 'checked' : ''}" onclick="toggleC(${h.id})"><span>${h.text}</span><div><span style="cursor:pointer;">${h.checked ? '✅' : '⭕'}</span><span class="btn-del" onclick="delI(${h.id}, event)">🗑️</span></div></div>`).join('');
     }
-    updateHistory();
+    save();
 </script>
 </body>
 </html>
