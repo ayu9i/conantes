@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conan Hub Ultimate V3.8.5 | Detective Conan x Lupin III Edition</title>
+    <title>Conan Hub Ultimate V3.8.6 | Lupin III & Case Archive</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root { 
@@ -96,7 +96,6 @@
             background: linear-gradient(135deg, #b91c1c, #7f1d1d);
             color: white; font-weight: 600; border: none; grid-column: span 2;
         }
-        .btn-primary:hover, .btn-lupin:hover { box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3); }
 
         .history-section {
             margin-top: 40px; text-align: left; background: rgba(0,0,0,0.5);
@@ -135,10 +134,19 @@
         .msg.bot { background: #1a1a1a; align-self: flex-start; border: 1px solid #333; border-bottom-left-radius: 2px; }
         .msg.user { background: var(--conan-gold); color: #000; align-self: flex-end; border-bottom-right-radius: 2px; }
         
-        .quick-replies { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px 20px; background: #050505; border-top: 1px solid #1a1a1a; }
-        .reply-btn { background: #222; border: 1px solid #444; color: #ccc; padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; cursor: pointer; }
+        /* --- Tutorial & Overlay --- */
+        .tutorial-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); z-index: 9999; display: none;
+            align-items: center; justify-content: center; backdrop-filter: blur(8px);
+        }
+        .tutorial-card {
+            background: #111; border: 2px solid var(--conan-gold); border-radius: 25px;
+            padding: 30px; max-width: 400px; width: 85%; text-align: center;
+            box-shadow: 0 0 50px rgba(212, 175, 55, 0.3); animation: zoomIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes zoomIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-        /* --- Animations --- */
         .curtain-wall {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: 9999; display: flex;
@@ -153,104 +161,55 @@
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.85); backdrop-filter: blur(10px);
             display: flex; align-items: center; justify-content: center;
-            z-index: 5000; animation: fadeIn 0.4s ease;
+            z-index: 5000;
         }
-        .patch-card {
-            background: #0d0d0d; border: 2px solid var(--conan-gold);
-            width: 90%; max-width: 450px; border-radius: 30px; padding: 35px;
-            box-shadow: 0 0 50px rgba(212, 175, 55, 0.2); text-align: left;
-        }
-        .patch-card h2 { color: var(--conan-gold); margin-top: 0; letter-spacing: 2px; }
-        .patch-list { margin: 20px 0; padding-left: 20px; color: #ccc; }
-        .patch-list li { margin-bottom: 12px; font-size: 0.95rem; }
 
-        /* --- Database Viewer --- */
         #dbViewer {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #000; z-index: 6000; display: none; flex-direction: column;
-            animation: fadeIn 0.3s ease;
         }
-        .db-header {
-            padding: 25px; border-bottom: 1px solid var(--conan-gold);
-            display: flex; justify-content: space-between; align-items: center;
-            background: #0d0d0d;
-        }
+        .db-header { padding: 25px; border-bottom: 1px solid var(--conan-gold); display: flex; justify-content: space-between; align-items: center; background: #0d0d0d; }
         .db-content { flex: 1; overflow-y: auto; padding: 25px; }
-        .db-section { margin-bottom: 40px; }
-        .db-section h4 { color: var(--conan-gold); border-left: 4px solid var(--conan-gold); padding-left: 15px; margin-bottom: 15px; }
-        .db-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; }
+        .db-section h4 { color: var(--conan-gold); border-left: 4px solid var(--conan-gold); padding-left: 15px; margin: 20px 0 10px; }
+        .db-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 10px; }
         .db-item { background: #111; padding: 12px; border-radius: 8px; font-size: 0.85rem; border: 1px solid #222; }
 
-        /* --- 📱 RESPONSIVE SYSTEM --- */
-        @media (max-width: 768px) {
-            .main-header { font-size: 1.8rem; letter-spacing: 2px; }
-            .container { padding: 30px 15px; margin-top: 70px; }
-            .premium-card { padding: 20px; border-radius: 25px; }
-            .btn-grid { grid-template-columns: 1fr; gap: 10px; }
-            .btn-lupin { grid-column: span 1; }
-            #chatBox { width: 92%; right: 4%; bottom: 100px; height: 75vh; }
-            #chatBtn { width: 60px; height: 60px; bottom: 25px; right: 25px; }
-            #uiPanel { width: 85%; }
-            .db-grid { grid-template-columns: 1fr; }
-            .slot-unit h3 { font-size: 1.2rem; }
-        }
-
-        @media (min-width: 1024px) {
-            .container { max-width: 750px; }
-            .main-header { font-size: 3.5rem; }
-        }
-
-        /* --- ระบบช่วยสอน (New Tutorial Styles) --- */
-        .tutorial-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8); z-index: 9999; display: none;
-            align-items: center; justify-content: center; backdrop-filter: blur(8px);
-        }
-        .tutorial-card {
-            background: #111; border: 2px solid var(--conan-gold); border-radius: 25px;
-            padding: 30px; max-width: 400px; width: 85%; text-align: center;
-            box-shadow: 0 0 50px rgba(212, 175, 55, 0.3); animation: zoomIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        @keyframes zoomIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         .help-fab {
             position: fixed; bottom: 120px; right: 45px; width: 45px; height: 45px;
             background: #1a1a1a; border: 1px solid var(--conan-gold); border-radius: 50%;
             display: flex; align-items: center; justify-content: center; color: var(--conan-gold);
-            cursor: pointer; z-index: 999; font-weight: bold; transition: 0.3s;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            cursor: pointer; z-index: 999; font-weight: bold;
         }
-        .help-fab:hover { background: var(--conan-gold); color: #000; transform: rotate(15deg); }
     </style>
 </head>
 <body>
 
 <div id="patchNotesOverlay">
-    <div class="patch-card">
-        <h2>NEW PATCH V3.8.5</h2>
-        <p style="color:var(--conan-gold); font-size: 0.8rem; margin-bottom: 20px;">LUPIN III CROSSOVER UPDATE</p>
-        <ul class="patch-list">
-            <li>เพิ่มหมวดหมู่ <b>Lupin III vs Detective Conan</b> (2009/2013)</li>
-            <li>เพิ่มการสุ่มคดีตามกลุ่มตัวละคร <b>"แก๊งนักสืบเยาวชน"</b></li>
-            <li>ปรับปรุงระบบ <b>Database Syncing</b> ให้ลื่นไหลขึ้น</li>
-            <li>เพิ่มหน้า <b>Database Viewer</b> ตรวจสอบรายชื่อตอนทั้งหมด</li>
+    <div class="patch-card" style="background:#0d0d0d; border:2px solid var(--conan-gold); padding:35px; border-radius:30px; max-width:450px; width:90%;">
+        <h2 style="color:var(--conan-gold); margin-top:0;">NEW PATCH V3.8.6</h2>
+        <ul style="color:#ccc; font-size:0.95rem; line-height:1.6;">
+            <li>อัปเดตระบบสุ่ม <b>iQIYI ครบ 1-981 ตอน</b></li>
+            <li>ปรับซีซั่น 20-25 <b>TrueVisions (1-52 และ S25 1-13)</b></li>
+            <li>แก้ไขระบบ Tutorial Step ให้แสดงผลถูกต้อง</li>
+            <li>เพิ่ม <b>Database Sync</b> สำหรับการสุ่ม Range ใหม่</li>
         </ul>
-        <button class="action-btn btn-primary" style="width: 100%; margin-top: 10px;" onclick="closePatch()">รับทราบการอัปเดต</button>
+        <button class="action-btn btn-primary" style="width: 100%; margin-top: 10px;" onclick="closePatch()">เริ่มสืบคดี</button>
     </div>
 </div>
 
 <div id="tutorialOverlay" class="tutorial-overlay">
     <div class="tutorial-card">
         <div id="t-icon" style="font-size: 3.5rem; margin-bottom: 15px;">👋</div>
-        <h3 id="t-title" style="color: var(--conan-gold); margin-top: 0;">คู่มือการสืบคดี</h3>
+        <h3 id="t-title" style="color: var(--conan-gold); margin-top: 0;"></h3>
         <p id="t-desc" style="color: #ccc; font-size: 0.95rem; line-height: 1.6; min-height: 80px;"></p>
-        <div style="font-size: 0.7rem; color: #555; margin: 15px 0;" id="t-step">Step 1 / 4</div>
+        <div style="font-size: 0.7rem; color: #555; margin: 15px 0;" id="t-step"></div>
         <button class="action-btn btn-primary" style="width: 100%;" onclick="nextTutorialStep()">ถัดไป</button>
     </div>
 </div>
 
 <div id="dbViewer">
     <div class="db-header">
-        <h2 style="margin:0; color:var(--conan-gold);">DATABASE ARCHIVE</h2>
+        <h2 style="margin:0; color:var(--conan-gold);">INVESTIGATION ARCHIVE</h2>
         <button class="action-btn" onclick="toggleDB()" style="padding: 8px 20px;">กลับหน้าหลัก</button>
     </div>
     <div class="db-content" id="dbContent"></div>
@@ -259,7 +218,6 @@
 <div class="config-btn" onclick="toggleUI()">⚙️</div>
 <div id="uiPanel">
     <h3 style="color:var(--conan-gold); margin-top:0;">CRIMINAL DATABASE</h3>
-    <p style="font-size: 0.75rem; opacity:0.6;">Ayu's Private Investigator Tool</p>
     <hr style="border: 0.5px solid #222; margin: 20px 0;">
     <div style="margin-top:20px">
         <label style="font-size: 0.8rem; color:var(--conan-gold)">THEME INTERFACE</label>
@@ -267,7 +225,6 @@
             <option value="#d4af37">Gold (Original)</option>
             <option value="#3b82f6">Blue (Detective)</option>
             <option value="#ef4444">Red (Criminal)</option>
-            <option value="#a855f7">Purple (Sherry)</option>
         </select>
     </div>
     <div style="margin-top:30px">
@@ -282,44 +239,35 @@
 </div>
 
 <div class="container">
-    <h1 class="main-header">CONAN HUB V3.8.5</h1>
-    
+    <h1 class="main-header">CONAN HUB V3.8.6</h1>
     <div class="premium-card">
-        <div id="statusBadge" style="font-size: 0.75rem; color:var(--conan-gold); border:1px solid var(--conan-gold); display:inline-block; padding:4px 14px; border-radius:25px; margin-bottom:15px; opacity:0; transition:0.4s; letter-spacing:1px;">SYNCING DATABASE...</div>
-        
+        <div id="statusBadge" style="font-size: 0.75rem; color:var(--conan-gold); border:1px solid var(--conan-gold); display:inline-block; padding:4px 14px; border-radius:25px; margin-bottom:15px; opacity:0; transition:0.4s; letter-spacing:1px;">READY</div>
         <div class="slot-box">
             <div id="slotWrapper" class="slot-wrapper">
                 <div class="slot-unit">
                     <h3>สถานะ: พร้อมสืบคดี</h3>
-                    <p>สุ่มตอนทั่วไป (1-25) หรือ มูฟวี่ (1-28)</p>
+                    <p>สุ่ม iQIYI (1-981) หรือ True (S20-25)</p>
                 </div>
             </div>
         </div>
-
         <div class="btn-grid">
-            <button class="action-btn btn-primary" id="btnAll" style="grid-column: span 2;" onclick="spinProcess('all')">สุ่มทั้งหมด (ทุกแพลตฟอร์ม)</button>
-            <button class="action-btn" onclick="spinProcess('series')">สุ่มทีวีซีรีส์ (True/iQIYI)</button>
-            <button class="action-btn" onclick="spinProcess('movie')">เดอะมูฟวี่ (1-28)</button>
-            <button class="action-btn btn-lupin" onclick="spinProcess('lupin')">🎭 โคนัน ปะทะ ลูแปงที่ 3 (All Specials)</button>
+            <button class="action-btn btn-primary" style="grid-column: span 2;" onclick="spinProcess('all')">สุ่มทั้งหมด (1-981 & S20-25)</button>
+            <button class="action-btn" onclick="spinProcess('iqiyi')">สุ่ม iQIYI (1-981)</button>
+            <button class="action-btn" onclick="spinProcess('true')">สุ่ม TrueVisions (S20-25)</button>
+            <button class="action-btn btn-lupin" onclick="spinProcess('lupin')">🎭 Lupin III vs Detective Conan (All)</button>
         </div>
-
         <div style="margin-top:20px;">
-            <select id="charSelect" class="action-btn" style="width:100%; text-align:center; background: rgba(0,0,0,0.4); border-color: rgba(212,175,55,0.3);">
-                <option value="black_org">💀 องค์กรชุดดำ (Black Org)</option>
-                <option value="kid">🎩 จอมโจรคิด (Phantom Kid)</option>
-                <option value="ai">🧪 ไฮบาระ ไอ (Haibara)</option>
-                <option value="detective_boys">🏫 แก๊งนักสืบเยาวชน (Detective Boys)</option>
-                <option value="fbi">🔫 FBI & อากาอิ (Akai)</option>
-                <option value="zero">☕ อามุโร่ (Bourbon)</option>
-                <option value="heiji">🏍️ ฮัตโตริ เฮย์จิ (Heiji)</option>
+            <select id="charSelect" class="action-btn" style="width:100%; background: rgba(0,0,0,0.4);">
+                <option value="black_org">💀 องค์กรชุดดำ</option>
+                <option value="kid">🎩 จอมโจรคิด</option>
+                <option value="detective_boys">🏫 แก๊งนักสืบเยาวชน</option>
             </select>
             <button class="action-btn btn-primary" style="width:100%; margin-top:12px;" onclick="spinProcess('char')">สุ่มคดีตามกลุ่มตัวละคร</button>
         </div>
-
         <div class="history-section">
             <div style="display:flex; justify-content:space-between; align-items:center;">
-                <span style="font-size: 1rem; font-weight:600; color:var(--conan-gold)">INVESTIGATION LOG</span>
-                <span onclick="clearHistory()" style="font-size:0.75rem; cursor:pointer; opacity:0.5; color:var(--danger)">[ลบประวัติ]</span>
+                <span style="font-size: 1rem; color:var(--conan-gold)">INVESTIGATION LOG</span>
+                <span onclick="clearHistory()" style="font-size:0.75rem; cursor:pointer; color:var(--danger)">[ลบประวัติ]</span>
             </div>
             <div id="historyList" class="history-list"></div>
         </div>
@@ -327,175 +275,65 @@
 </div>
 
 <div class="help-fab" onclick="startTutorial()">?</div>
-
 <div id="chatBtn" onclick="toggleChat()">🔍</div>
 <div id="chatBox">
-    <div class="chat-head">
-        <span>Assistant Detective Ayu</span>
-        <span onclick="toggleChat()" style="cursor:pointer; font-size: 1.5rem;">&times;</span>
-    </div>
+    <div class="chat-head"><span>Detective Assistant</span><span onclick="toggleChat()" style="cursor:pointer;">&times;</span></div>
     <div class="chat-content" id="chatContent">
-        <div class="msg bot">สวัสดีค่ะคุณ Ayu! อัปเดต V3.8.5 เพิ่มหมวดหมู่ Lupin III และแก๊งนักสืบเยาวชนแล้วนะคะ มีอะไรให้ช่วยสืบคดีไหนเป็นพิเศษไหมคะ?</div>
+        <div class="msg bot">สวัสดีค่ะคุณ Ayu! ระบบ V3.8.6 อัปเกรดฐานข้อมูล 981 ตอนเรียบร้อยแล้วนะคะ</div>
     </div>
-    <div class="quick-replies">
-        <div class="reply-btn" onclick="quickChat('สุ่มตอนลูแปง')">สุ่มลูแปง</div>
-        <div class="reply-btn" onclick="quickChat('แก๊งนักสืบเยาวชนมีตอนไหนบ้าง')">ตอนเด่นแก๊งเด็ก</div>
-        <div class="reply-btn" onclick="quickChat('วิธีลบประวัติ')">วิธีลบประวัติ</div>
-    </div>
-    <div style="padding:15px; border-top:1px solid #222; display:flex; gap:10px; background:#0a0a0a;">
-        <input type="text" id="chatInput" placeholder="พิมพ์ข้อความ..." style="flex:1; background:#1a1a1a; border:1px solid #333; border-radius:12px; color:#fff; padding:12px; font-family:'Kanit';">
-        <button onclick="sendChat()" style="background:var(--conan-gold); border:none; border-radius:12px; padding:0 20px; cursor:pointer; font-weight:600;">ส่ง</button>
+    <div style="padding:15px; display:flex; gap:10px; background:#0a0a0a;">
+        <input type="text" id="chatInput" placeholder="ถามข้อมูลคดี..." style="flex:1; background:#1a1a1a; border:none; border-radius:10px; color:#fff; padding:10px;">
+        <button onclick="sendChat()" style="background:var(--conan-gold); border:none; border-radius:10px; padding:0 15px;">ส่ง</button>
     </div>
 </div>
 
 <script>
-// --- 📚 MEGA DATABASE V3.8.6 (FULL iQIYI 1-927) ---
-const iqiyiData = {
-    totalEpisodes: 927,
-    seasons: [
-        { s: 1, range: [1, 44] }, { s: 2, range: [45, 96] }, { s: 3, range: [97, 142] },
-        { s: 4, range: [143, 193] }, { s: 5, range: [194, 244] }, { s: 6, range: [245, 296] },
-        { s: 7, range: [297, 349] }, { s: 8, range: [350, 401] }, { s: 9, range: [402, 453] },
-        { s: 10, range: [454, 506] }, { s: 11, range: [507, 559] }, { s: 12, range: [560, 613] },
-        { s: 13, range: [614, 666] }, { s: 14, range: [667, 718] }, { s: 15, range: [719, 770] },
-        { s: 16, range: [771, 822] }, { s: 17, range: [823, 874] }, { s: 18, range: [875, 926] },
-        { s: 19, range: [927, 927] }
-    ],
-    trueVisions: {
-        s20: Array.from({length: 52}, (_, i) => ({ ep: i + 1, s: 20, title: `คดีปริศนาลำดับที่ ${i + 1} (S20)` })),
-        s21: Array.from({length: 52}, (_, i) => ({ ep: i + 1, s: 21, title: `คดีปริศนาลำดับที่ ${i + 1} (S21)` })),
-        s22: Array.from({length: 52}, (_, i) => ({ ep: i + 1, s: 22, title: `คดีปริศนาลำดับที่ ${i + 1} (S22)` })),
-        s23: Array.from({length: 52}, (_, i) => ({ ep: i + 1, s: 23, title: `คดีปริศนาลำดับที่ ${i + 1} (S23)` })),
-        s24: Array.from({length: 52}, (_, i) => ({ ep: i + 1, s: 24, title: `คดีปริศนาลำดับที่ ${i + 1} (S24)` })),
-        s25: Array.from({length: 12}, (_, i) => ({ ep: i + 1, s: 25, title: `คดีปริศนาลำดับที่ ${i + 1} (S25)` }))
+const caseConfig = {
+    iqiyi: { max: 981, label: "iQIYI Global" },
+    trueV: {
+        s20: 52, s21: 52, s22: 52, s23: 52, s24: 52, s25: 13
     },
-    lupin: [
-        "Lupin III vs Detective Conan: The Special (2009)",
-        "Lupin III vs Detective Conan: The Movie (2013)"
-    ]
+    lupin: ["Lupin III vs Detective Conan (2009 Special)", "Lupin III vs Detective Conan (2013 Movie)"],
+    char: {
+        black_org: ["S1 ตอนที่ 1: จุดเริ่มต้น", "S11 ตอนที่ 538: ดำปะทะแดงเดือด", "S15 ตอนที่ 753: Mystery Train"],
+        kid: ["S2 ตอนที่ 78: โคนันปะทะคิด", "S11 ตอนที่ 562: เคล็ดลับการวาร์ป"],
+        detective_boys: ["S2 ตอนที่ 51: ห้องสมุด", "S20 S20-Ep 15: ค่ายฤดูร้อน", "S25 S25-Ep 8: คดีร้านสะดวกซื้อ"]
+    }
 };
-
-const charCases = {
-    black_org: [
-        "S1 Ep 1: จุดเริ่มต้นและชายชุดดำ", "S3 Ep 136: ผู้หญิงที่มาจากองค์กรชุดดำ", 
-        "S5 Ep 190: การเผชิญหน้าอีกครั้งกับองค์กรชุดดำ", "S8 Ep 334: เบาะแสที่เหลือทิ้งไว้",
-        "S9 Ep 421: องค์กรชุดดำปะทะ FBI", "S11 Ep 538: ดำปะทะแดงเดือด (จุดพีค)",
-        "S15 Ep 753: รถด่วนทมิฬ (Mystery Train)", "S17 Ep 832: ความลับของฉากสีชาด",
-        "S23 S23-Ep 15: คลื่นที่รุนแรงขององค์กร", "S25 S25-Ep 4: การไล่ล่าสีดำ"
-    ],
-    kid: [
-        "S2 Ep 78: โคนันปะทะจอมโจรคิด", "S5 Ep 235: รวมพลเหล่านักสืบ คุโด้ ชินอิจิ ปะทะ จอมโจรคิด",
-        "S8 Ep 386: จอมโจรคิดกับการเดินบนอากาศ", "S11 Ep 562: เคล็ดลับการวาร์ปของจอมโจรคิด",
-        "S13 Ep 678: ระบำในสุสาน", "S16 Ep 776: คิดปะทะมาโคโตะ",
-        "S19 Ep 937: จอมโจรคิดกับกล่องอัญมณี", "S22 S22-Ep 14: คิดปะทะแฟรงกี้"
-    ],
-    ai: [
-        "S3 Ep 136: ผู้รวบรวมข้อมูล", "S4 Ep 188: การคืนชีพที่เดิมพันด้วยชีวิต", 
-        "S6 Ep 265: ปัญหาสุขภาพของไฮบาระ", "S13 Ep 648: ความลับของไฮบาระ ไอ",
-        "S15 Ep 754: อดีตของไฮบาระ", "S21 S21-Ep 40: ความทรงจำของไอ",
-        "S24 S24-Ep 12: การทดลองที่อันตราย"
-    ],
-    detective_boys: [
-        "S1 ตอนที่ 4: คดีลายแทงขุมทรัพย์", "S1 ตอนที่ 13: คดีชมรมสำรวจสืบสวน", 
-        "S2 ตอนที่ 51: คดีฆาตกรรมห้องสมุด", "S4 ตอนที่ 176: ทางเดินสีคราม", 
-        "S7 ตอนที่ 330: ความลับของบ้านพักประหลาด", "S10 ตอนที่ 473: คดีปริศนาในสวนสนุก", 
-        "S14 ตอนที่ 700: วิกฤติของแก๊งนักสืบเยาวชน", "S20 S20-Ep 15: ค่ายฤดูร้อนของเด็กๆ",
-        "S22 S22-Ep 30: การผจญภัยในป่าลึก", "S25 S25-Ep 8: คดีในร้านสะดวกซื้อ"
-    ],
-    fbi: [
-        "S6 Ep 249: ผู้มาจากชิคาโก้ (เจมส์ แบล็ค)", "S7 Ep 304: กรมตำรวจสั่นคลอน", 
-        "S9 Ep 421: แบล็คอิมแพ็ค (FBI vs Black Org)", "S11 Ep 539: อดีตของอากาอิ",
-        "S17 Ep 833: การกลับมาของอากาอิ", "S23 S23-Ep 10: ภารกิจลับ FBI ในญี่ปุ่น",
-        "S24 S24-Ep 25: กลยุทธ์ของโจดี้"
-    ],
-    zero: [
-        "S15 Ep 719: เวดดิ้งอีฟ (อามุโร่ปรากฏตัว)", "S16 Ep 731: นักสืบในเบอร์เบิน", 
-        "S17 Ep 823: เบอร์เบินเคลื่อนไหว", "S18 Ep 888: ตัวจริงของเบอร์เบิน",
-        "S20 S20-Ep 45: ภารกิจของ Zero", "S23 S23-Ep 45: ความลับของอามุโร่ โทรุ",
-        "S25 S25-Ep 2: การเผชิญหน้าสีขาว"
-    ],
-    heiji: [
-        "S1 Ep 48: ยอดนักสืบตะวันตก", "S2 Ep 59: คดีฆาตกรรมคนรักเชอร์ล็อก โฮล์ม", 
-        "S3 Ep 124: คดีฆาตกรรมต่อเนื่องแห่งนานิวะ", "S6 Ep 240: คดีปริศนาในเกาะเงือก",
-        "S13 Ep 667: คัมภีร์ของโฮล์ม (ลอนดอน)", "S19 Ep 927: ทัศนศึกษาสีแดง",
-        "S20 S20-Ep 2: คำสารภาพของเฮย์จิ", "S24 S24-Ep 18: แข่งขันไขคดีที่โอซาก้า"
-    ]
-};
-
-const movieNames = [
-    "คดีปริศนาระเบิดระฟ้า", "คดีฆาตกรรมไพ่ปริศนา", "ปริศนาพ่อมดคนสุดท้ายแห่งศตวรรษ", "คดีฆาตกรรมนัยน์ตาปริศนา",
-    "คดีปริศนาเส้นตายสู่สวรรค์", "ปริศนาบนถนนสายมรณะ", "คดีฆาตกรรมแห่งเมืองปริศนา", "มนตราแห่งรัตติกาลสีเงิน",
-    "ยุทธการเหนือห้วงทะเลลึก", "บทเพลงมรณะแด่เหล่าเหล่านักสืบ", "ปริศนามหาขุมทรัพย์โจรสลัด", "บทเพลงแห่งความตาย",
-    "ปริศนานักฆ่าทรยศ", "ปริศนามรณะเหนือน่านฟ้า", "15 นาทีเฉียดตาย", "ภาคระทึกขวัญยุทธจักรลูกหนัง",
-    "ฝ่าวิกฤติเรือรบมรณะ", "ปริศนากระสุนมรณะ", "ปริศนาทานตะวันมรณะ", "ปริศนาเงามรณะตัวสำรอง",
-    "ปริศนาเพลงกลอนซ่อนรัก", "ปฏิบัติการสายลับศูนย์", "ศึกชิงอัญมณีสีคราม", "กระสุนสีเพลิง",
-    "เจ้าสาวฮาโลวีน", "มฤตยูใต้น้ำทมิฬ", "ปริศนาปราการห้าแฉก", "ปริศนาภาพติดตามรณะ"
-];
 
 let history = JSON.parse(localStorage.getItem('conan_v38_data')) || [];
 let spinning = false;
 
 function closePatch() { document.getElementById('patchNotesOverlay').style.display = 'none'; }
-function clearHistory() { if(confirm("ยืนยันการล้างประวัติสุ่ม?")) { history = []; save(); updateUI(); addBotMsg("ล้างประวัติเรียบร้อยแล้วค่ะ!"); } }
-function isDup(text) { return history.some(item => item.text === text); }
-function changeTheme(c) { document.documentElement.style.setProperty('--conan-gold', c); }
 function toggleUI() { document.getElementById('uiPanel').classList.toggle('active'); }
-function toggleDB() {
-    const db = document.getElementById('dbViewer');
-    if(db.style.display === 'flex') { db.style.display = 'none'; } else { renderDatabase(); db.style.display = 'flex'; toggleUI(); }
-}
-
-function renderDatabase() {
-    const cont = document.getElementById('dbContent');
-    let html = "";
-    html += `<div class="db-section"><h4>🎭 LUPIN III VS CONAN</h4><div class="db-grid">`;
-    caseDatabase.lupin.forEach(l => html += `<div class="db-item">${l}</div>`);
-    html += `</div></div>`;
-    html += `<div class="db-section"><h4>🎬 THE MOVIES (1-28)</h4><div class="db-grid">`;
-    movieNames.forEach((m, i) => html += `<div class="db-item">Movie ${i+1}: ${m}</div>`);
-    html += `</div></div>`;
-    html += `<div class="db-section"><h4>👥 CHARACTER HIGHLIGHTS</h4><div class="db-grid">`;
-    for(let char in charCases) { charCases[char].forEach(c => html += `<div class="db-item"><b>[${char}]</b> ${c}</div>`); }
-    html += `</div></div>`;
-    html += `<div class="db-section"><h4>📺 TV SERIES (iQIYI/TRUE)</h4><div class="db-grid">`;
-    caseDatabase.iqiyi.forEach(c => html += `<div class="db-item">S${c.s} Ep${c.ep}: ${c.title}</div>`);
-    html += `<div class="db-item">...และซีรีส์ TrueVisions ซีซั่น 20-25</div>`;
-    html += `</div></div>`;
-    cont.innerHTML = html;
-}
+function changeTheme(c) { document.documentElement.style.setProperty('--conan-gold', c); }
+function save() { localStorage.setItem('conan_v38_data', JSON.stringify(history)); }
+function clearHistory() { if(confirm("ล้างประวัติสุ่ม?")) { history = []; save(); updateUI(); } }
 
 function spinProcess(type) {
     if (spinning) return;
-    let res = ""; let badge = ""; let found = false; let retry = 500;
-    while(!found && retry > 0) {
-        if (type === 'all' || type === 'series') {
-            const isTrueV = Math.random() < 0.3;
-            if(isTrueV) {
-                const seasons = ['s20', 's21', 's22', 's23', 's24', 's25'];
-                const sKey = seasons[Math.floor(Math.random() * seasons.length)];
-                const pool = caseDatabase.trueVisions[sKey];
-                const pick = pool[Math.floor(Math.random() * pool.length)];
-                res = `ซีซั่น ${pick.s} ตอนที่ ${pick.ep} (TrueVisions)`; badge = "TrueVisions";
-            } else {
-                const pick = caseDatabase.iqiyi[Math.floor(Math.random() * caseDatabase.iqiyi.length)];
-                res = `ซีซั่น ${pick.s} ตอนที่ ${pick.ep}: ${pick.title}`; badge = "iQIYI";
-            }
-        } else if (type === 'movie') {
-            const idx = Math.floor(Math.random() * movieNames.length);
-            res = `The Movie ${idx + 1}: ${movieNames[idx]}`; badge = "Movie";
-        } else if (type === 'lupin') {
-            res = caseDatabase.lupin[Math.floor(Math.random() * caseDatabase.lupin.length)];
-            badge = "Lupin III Crossover";
-        } else if (type === 'char') {
-            const char = document.getElementById('charSelect').value;
-            const pool = charCases[char];
-            res = pool[Math.floor(Math.random() * pool.length)];
-            badge = `Target: ${char}`;
-        }
-        if(!isDup(res)) found = true;
-        retry--;
+    let res = ""; let badge = "";
+    
+    if (type === 'iqiyi' || (type === 'all' && Math.random() > 0.5)) {
+        const ep = Math.floor(Math.random() * caseConfig.iqiyi.max) + 1;
+        res = `ตอนที่ ${ep} (iQIYI Global)`;
+        badge = "iQIYI 1-981";
+    } else if (type === 'true' || type === 'all') {
+        const seasons = Object.keys(caseConfig.trueV);
+        const sKey = seasons[Math.floor(Math.random() * seasons.length)];
+        const ep = Math.floor(Math.random() * caseConfig.trueV[sKey]) + 1;
+        res = `ซีซั่น ${sKey.replace('s','')} ตอนที่ ${ep} (TrueVisions)`;
+        badge = "TrueVisions";
+    } else if (type === 'lupin') {
+        res = caseConfig.lupin[Math.floor(Math.random() * caseConfig.lupin.length)];
+        badge = "Lupin Crossover";
+    } else if (type === 'char') {
+        const char = document.getElementById('charSelect').value;
+        const pool = caseConfig.char[char];
+        res = pool[Math.floor(Math.random() * pool.length)];
+        badge = `Target: ${char}`;
     }
-    if(!found) { alert("สุ่มจนครบฐานข้อมูลแล้ว!"); return; }
+
     executeSpin(res, badge);
 }
 
@@ -504,21 +342,20 @@ function executeSpin(txt, b) {
     const wrap = document.getElementById('slotWrapper');
     const curtain = document.getElementById('curtainWall');
     curtain.classList.add('active');
+    
     setTimeout(() => {
-        const dummy = [{h: "LOCATING CASE", p: "V3.8.5 System"}, {h: "LUPIN/CONAN", p: "Cross-Checking"}];
-        let content = dummy.map(d => `<div class="slot-unit"><h3>${d.h}</h3><p>${d.p}</p></div>`).join('');
-        const parts = txt.split(': ');
-        content += `<div class="slot-unit"><h3>${parts[0]}</h3><p>${parts[1] || ""}</p></div>`;
-        wrap.innerHTML = content;
+        wrap.innerHTML = `<div class="slot-unit"><h3>SCANNING...</h3><p>Database V3.8.6</p></div>
+                          <div class="slot-unit"><h3>${txt.split(' (')[0]}</h3><p>${b}</p></div>`;
         wrap.style.transition = "none";
         wrap.style.transform = "translateY(0)";
-        wrap.offsetHeight; 
+        wrap.offsetHeight;
         wrap.style.transition = "2.5s cubic-bezier(0.1, 0.8, 0.2, 1)";
-        wrap.style.transform = `translateY(-${dummy.length * 150}px)`;
+        wrap.style.transform = "translateY(-150px)";
         curtain.classList.remove('active');
+        
         setTimeout(() => {
-            const badgeElement = document.getElementById('statusBadge');
-            badgeElement.style.opacity = "1"; badgeElement.innerText = b;
+            document.getElementById('statusBadge').style.opacity = "1";
+            document.getElementById('statusBadge').innerText = b;
             addHist(txt, b); spinning = false;
         }, 2600);
     }, 700);
@@ -527,41 +364,20 @@ function executeSpin(txt, b) {
 function addHist(t, tag) { history.unshift({ id: Date.now(), text: t, tag: tag }); save(); updateUI(); }
 function updateUI() {
     const list = document.getElementById('historyList');
-    if(!history.length) { list.innerHTML = `<div style="text-align:center; padding:30px; opacity:0.3;">[ ระบบว่างเปล่า ]</div>`; return; }
-    list.innerHTML = history.map(h => `
+    list.innerHTML = history.length ? history.map(h => `
         <div class="history-item">
             <span>${h.text} <span class="tag">${h.tag}</span></span>
-            <span onclick="delItem(${h.id})" style="cursor:pointer; color:var(--danger)">🗑️</span>
-        </div>
-    `).join('');
+            <span onclick="delItem(${h.id})" style="cursor:pointer;">🗑️</span>
+        </div>`).join('') : '<div style="text-align:center; opacity:0.3; padding:20px;">[ ว่างเปล่า ]</div>';
 }
 function delItem(id) { history = history.filter(h => h.id !== id); save(); updateUI(); }
-function save() { localStorage.setItem('conan_v38_data', JSON.stringify(history)); }
-function toggleChat() { const b = document.getElementById('chatBox'); b.style.display = b.style.display === 'flex' ? 'none' : 'flex'; }
-function quickChat(text) { document.getElementById('chatInput').value = text; sendChat(); }
-function addBotMsg(t) { const c = document.getElementById('chatContent'); c.innerHTML += `<div class="msg bot">${t}</div>`; c.scrollTop = c.scrollHeight; }
-function sendChat() {
-    const i = document.getElementById('chatInput');
-    const v = i.value.trim(); if(!v) return;
-    const c = document.getElementById('chatContent');
-    c.innerHTML += `<div class="msg user">${v}</div>`;
-    i.value = "";
-    setTimeout(() => {
-        let r = "กำลังวิเคราะห์ข้อมูลให้คุณ Ayu ค่ะ...";
-        if(v.includes("ลูแปง")) r = "สุ่มลูแปงได้ทั้ง Special 2009 และ Movie 2013 เลยค่ะ!";
-        if(v.includes("แก๊งนักสืบเยาวชน")) r = "ระบบดึงข้อมูลตอนเด่นๆ ของแก๊งเด็กมาให้แล้วค่ะ มีทั้งซีซั่นเก่าและใหม่เลย!";
-        if(v.includes("ลบประวัติ")) r = "ปุ่ม [ลบประวัติ] อยู่ตรงส่วน Investigation Log นะคะ";
-        addBotMsg(r);
-    }, 700);
-}
 
-// --- Tutorial System Logic (Added Without Modifying Original) ---
+// Tutorial System
 let currentTStep = 0;
 const tData = [
-    { title: "ยินดีต้อนรับคุณ Ayu!", desc: "นี่คือระบบ Conan Hub V3.8.5 ที่รวมคดีทั้งหมดไว้ในที่เดียว ทั้ง iQIYI และ TrueVisions ค่ะ", icon: "🕵️" },
-    { title: "สุ่มตอน Lupin III", desc: "คุณสามารถกดปุ่มสีแดง 'Lupin III Crossover' เพื่อสุ่มเฉพาะตอนที่โคนันปะทะกับลูแปงได้ทันที!", icon: "🎭" },
-    { title: "ระบบคัดกรองตัวละคร", desc: "อยากดูตอนที่มีองค์กรชุดดำ หรือจอมโจรคิด? เลือกกลุ่มที่ต้องการแล้วกด 'สุ่มตามกลุ่มตัวละคร' ได้เลย", icon: "🎩" },
-    { title: "ดูฐานข้อมูลทั้งหมด", desc: "กดปุ่มเฟือง (⚙️) มุมซ้ายบน เพื่อเปิด 'Database Viewer' ตรวจสอบรายชื่อตอนทั้งหมดที่มีในระบบค่ะ", icon: "⚙️" }
+    { title: "สวัสดีคุณ Ayu!", desc: "ระบบ V3.8.6 อัปเกรดฐานข้อมูล iQIYI เป็น 981 ตอนเรียบร้อยแล้วค่ะ", icon: "🕵️" },
+    { title: "สุ่มได้แม่นยำขึ้น", desc: "แยกหมวด iQIYI (S1-19) และ TrueVisions (S20-25) อย่างชัดเจน", icon: "📊" },
+    { title: "Lupin III", desc: "สุ่มได้ทั้งฉบับ Special และ Movie ในปุ่มเดียว!", icon: "🎭" }
 ];
 
 function startTutorial() {
@@ -569,16 +385,11 @@ function startTutorial() {
     document.getElementById('tutorialOverlay').style.display = 'flex';
     updateTUI();
 }
-
 function nextTutorialStep() {
     currentTStep++;
-    if(currentTStep >= tData.length) {
-        document.getElementById('tutorialOverlay').style.display = 'none';
-    } else {
-        updateTUI();
-    }
+    if(currentTStep >= tData.length) document.getElementById('tutorialOverlay').style.display = 'none';
+    else updateTUI();
 }
-
 function updateTUI() {
     const d = tData[currentTStep];
     document.getElementById('t-title').innerText = d.title;
@@ -587,14 +398,38 @@ function updateTUI() {
     document.getElementById('t-step').innerText = `Step ${currentTStep + 1} / ${tData.length}`;
 }
 
-// Check first time visit
-window.addEventListener('load', () => {
-    updateUI();
-    if(!localStorage.getItem('ayu_hub_tutorial_seen')) {
-        setTimeout(startTutorial, 2000);
-        localStorage.setItem('ayu_hub_tutorial_seen', 'true');
+function toggleChat() { const b = document.getElementById('chatBox'); b.style.display = b.style.display === 'flex' ? 'none' : 'flex'; }
+function sendChat() {
+    const i = document.getElementById('chatInput'); if(!i.value) return;
+    const c = document.getElementById('chatContent');
+    c.innerHTML += `<div class="msg user">${i.value}</div>`;
+    setTimeout(() => { c.innerHTML += `<div class="msg bot">รับทราบค่ะ! กำลังดำเนินการตรวจสอบข้อมูล...</div>`; c.scrollTop = c.scrollHeight; }, 600);
+    i.value = "";
+}
+
+function toggleDB() {
+    const db = document.getElementById('dbViewer');
+    if(db.style.display === 'flex') db.style.display = 'none';
+    else {
+        renderDB();
+        db.style.display = 'flex';
     }
-});
+}
+function renderDB() {
+    const cont = document.getElementById('dbContent');
+    cont.innerHTML = `
+        <div class="db-section"><h4>iQIYI ARCHIVE</h4><div class="db-item">ซีซั่น 1 - 19 (รวม 981 ตอน)</div></div>
+        <div class="db-section"><h4>TRUEVISIONS ARCHIVE</h4>
+            <div class="db-grid">
+                <div class="db-item">S20-S24: 52 ตอน/ซีซั่น</div>
+                <div class="db-item">S25: 1-13 ตอน</div>
+            </div>
+        </div>
+        <div class="db-section"><h4>CROSSOVER</h4><div class="db-item">Lupin III vs Detective Conan (2009/2013)</div></div>
+    `;
+}
+
+updateUI();
 </script>
 </body>
 </html>
